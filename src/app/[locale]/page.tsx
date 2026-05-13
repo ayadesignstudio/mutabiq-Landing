@@ -1726,7 +1726,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>دعم تجريبي لـ ٣ جهات شريكة</span>
+                  <span>حماية بيانات PDPL · عَزل تام بين الجهات</span>
                 </li>
               </ul>
             </article>
