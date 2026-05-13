@@ -1,0 +1,32 @@
+/* Minimal global resets — the marketing page brings its own
+   typography + colors via mutabiq-tokens.css and marketing.css. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-ar, "IBM Plex Sans Arabic", system-ui, sans-serif);
+  background: #fff;
+  color: var(--fg, #18181b);
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}

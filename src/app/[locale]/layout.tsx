@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing, type Locale } from "@/i18n/routing";
+import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: "Mutabiq Cloud — DGA Compliance Platform",
@@ -40,7 +41,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
-      <body>
+      <body style={{ minHeight: "100vh" }}>
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
