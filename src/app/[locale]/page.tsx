@@ -40,6 +40,11 @@ import {
 } from "lucide-react";
 import { MarketingReveal } from "./_marketing/MarketingReveal";
 
+// GitHub Pages serves the site under `/mutabiq-Landing/`. Plain <img>
+// + <a href> tags don't get auto-prefixed with basePath, so we prepend
+// it manually for every public/* asset reference. Empty string in dev.
+const ASSET = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 type HomePageProps = {
   params: Promise<{ locale: string }>;
 };
@@ -155,7 +160,7 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="hero-ctas">
               <a
                 className="hero-cta hero-cta-primary"
-                href="/mutabiq-cloud-deck.pdf"
+                href={`${ASSET}/mutabiq-cloud-deck.pdf`}
                 download="Mutabiq-Cloud-Presentation.pdf"
               >
                 <span className="hero-cta-ic"><Download /></span>
@@ -318,7 +323,7 @@ export default async function HomePage({ params }: HomePageProps) {
                   <div key={logo.slug} className="logo-item" data-slug={logo.slug} title={logo.ar}>
                     <img
                       className={`logo-mark${logo.dense ? " is-dense" : ""}`}
-                      src={`/logos/${logo.slug}.svg`}
+                      src={`${ASSET}/logos/${logo.slug}.svg`}
                       alt={logo.ar}
                       loading="lazy"
                     />
