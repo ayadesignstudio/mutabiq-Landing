@@ -1696,55 +1696,110 @@ export default async function HomePage({ params }: HomePageProps) {
           </div>
 
           <div className="roadmap-grid" data-reveal-stagger>
-            {/* Phase 1 — V1 launch (Aug 2026) */}
-            <article className="roadmap-phase roadmap-phase-1" data-reveal>
-              <span className="roadmap-phase-num">01</span>
-              <span className="roadmap-phase-period">شهر ٨ · ٢٠٢٦</span>
-              <div className="roadmap-phase-body">
-                <h3>التجهيز والإطلاق الأول</h3>
-                <p className="roadmap-phase-tagline">إطلاق Mutabiq Cloud V1 + ربطه مع إضافة Figma المتاحة بالفعل.</p>
-                <ul>
-                  <li><b>Mutabiq for Figma</b> — متاحة الآن (٨٠ قاعدة Lint)</li>
-                  <li><b>Mutabiq Cloud V1</b> — تدقيق URL، ZIP، GitHub</li>
-                  <li>محرّك DXMI 2026 (+70 قاعدة آلية)</li>
-                  <li>تقارير PDF و Excel بالعربية الفصحى</li>
-                  <li>دعم تجريبي لـ ٣ جهات شريكة</li>
-                </ul>
+            {/* Phase 1 — FEATURED (solid sa-green, white text). The
+                "current/upcoming" milestone gets pricing-card-style
+                emphasis since this is what readers can act on today. */}
+            <article className="roadmap-card roadmap-card-featured" data-reveal>
+              <span className="roadmap-card-badge">المرحلة الحالية</span>
+              <span className="roadmap-card-icon"><Rocket /></span>
+              <div className="roadmap-card-meta">
+                <span className="roadmap-card-num">٠١</span>
+                <span className="roadmap-card-when">شهر ٨ · ٢٠٢٦</span>
               </div>
+              <h3 className="roadmap-card-title">التجهيز والإطلاق الأول</h3>
+              <p className="roadmap-card-tagline">إطلاق Mutabiq Cloud V1 + ربطه مع إضافة Figma المتاحة بالفعل.</p>
+              <ul className="roadmap-card-features">
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span><b>Mutabiq for Figma</b> — متاحة الآن (٨٠ قاعدة Lint)</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span><b>Mutabiq Cloud V1</b> — تدقيق URL، ZIP، GitHub</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>محرّك DXMI 2026 (+70 قاعدة آلية)</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>تقارير PDF و Excel بالعربية الفصحى</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>دعم تجريبي لـ ٣ جهات شريكة</span>
+                </li>
+              </ul>
+              <a className="roadmap-card-cta" href="#how-it-works">
+                كن جهة شريكة
+                <ArrowLeft />
+              </a>
             </article>
 
-            {/* Phase 2 — V1.5 (Q4 2026 - Q1 2027) */}
-            <article className="roadmap-phase roadmap-phase-2" data-reveal>
-              <span className="roadmap-phase-num">02</span>
-              <span className="roadmap-phase-period">Q4 ٢٠٢٦ · Q1 ٢٠٢٧</span>
-              <div className="roadmap-phase-body">
-                <h3>التشغيل المستمر والمراقبة</h3>
-                <p className="roadmap-phase-tagline">تحويل التدقيق من حدث لمرّة واحدة إلى مراقبة دائمة.</p>
-                <ul>
-                  <li>جدولة تدقيقات دورية (أسبوعية/شهرية)</li>
-                  <li>مقارنة تاريخية بين التدقيقات</li>
-                  <li>روابط تقارير قابلة للمشاركة</li>
-                  <li>تسليم النتائج بالبريد الإلكتروني</li>
-                  <li>تدقيق الصفحات المحمية بكلمة مرور</li>
-                </ul>
+            {/* Phase 2 — outline */}
+            <article className="roadmap-card" data-reveal>
+              <span className="roadmap-card-icon"><Activity /></span>
+              <div className="roadmap-card-meta">
+                <span className="roadmap-card-num">٠٢</span>
+                <span className="roadmap-card-when">Q4 ٢٠٢٦ · Q1 ٢٠٢٧</span>
               </div>
+              <h3 className="roadmap-card-title">التشغيل المستمر والمراقبة</h3>
+              <p className="roadmap-card-tagline">تحويل التدقيق من حدث لمرّة واحدة إلى مراقبة دائمة.</p>
+              <ul className="roadmap-card-features">
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>جدولة تدقيقات دورية (أسبوعية/شهرية)</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>مقارنة تاريخية بين التدقيقات</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>روابط تقارير قابلة للمشاركة</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>تسليم النتائج بالبريد الإلكتروني</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>تدقيق الصفحات المحمية بكلمة مرور</span>
+                </li>
+              </ul>
             </article>
 
-            {/* Phase 3 — V2 (Q2-Q3 2027) */}
-            <article className="roadmap-phase roadmap-phase-3" data-reveal>
-              <span className="roadmap-phase-num">03</span>
-              <span className="roadmap-phase-period">Q2 · Q3 ٢٠٢٧</span>
-              <div className="roadmap-phase-body">
-                <h3>التكامل والتوسعة</h3>
-                <p className="roadmap-phase-tagline">دخول مُطابق إلى خط الإنتاج اليومي للجهات.</p>
-                <ul>
-                  <li>تكامل CI/CD (GitHub Actions، GitLab)</li>
-                  <li>ربط Nafath / SSO للجهات الحكومية</li>
-                  <li>Webhooks للأنظمة الداخلية</li>
-                  <li>تقارير بيضاء (white-label)</li>
-                  <li>طبقة self-serve بالكارت</li>
-                </ul>
+            {/* Phase 3 — outline */}
+            <article className="roadmap-card" data-reveal>
+              <span className="roadmap-card-icon"><Network /></span>
+              <div className="roadmap-card-meta">
+                <span className="roadmap-card-num">٠٣</span>
+                <span className="roadmap-card-when">Q2 · Q3 ٢٠٢٧</span>
               </div>
+              <h3 className="roadmap-card-title">التكامل والتوسعة</h3>
+              <p className="roadmap-card-tagline">دخول مُطابق إلى خط الإنتاج اليومي للجهات.</p>
+              <ul className="roadmap-card-features">
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>تكامل CI/CD (GitHub Actions، GitLab)</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>ربط Nafath / SSO للجهات الحكومية</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>Webhooks للأنظمة الداخلية</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>تقارير بيضاء (white-label)</span>
+                </li>
+                <li>
+                  <span className="roadmap-card-check"><Check /></span>
+                  <span>طبقة self-serve بالكارت</span>
+                </li>
+              </ul>
             </article>
           </div>
 
