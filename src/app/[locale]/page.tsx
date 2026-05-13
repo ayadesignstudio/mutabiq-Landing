@@ -1689,9 +1689,8 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="s-kicker">خارطة الطريق · ١٢ شهرًا</div>
             <h2 className="s-title">ثلاث مراحل · تسليم واضح في كل مرحلة</h2>
             <p className="s-lede">
-              كل مرحلة تنتهي بتسليم محدّد وقيمة قابلة للقياس. البدء فوريّ —
-              <em> Mutabiq for Figma</em> متاح الآن، و<em>Mutabiq Cloud V1</em>
-              يُطلق في شهر ٨ من ٢٠٢٦.
+              كل مرحلة تنتهي بتسليم محدَّد وقيمة قابلة للقياس عند جهتكم —
+              خطّة عمل واضحة من اليوم وحتى ٢٠٢٧.
             </p>
           </div>
 
@@ -1730,10 +1729,6 @@ export default async function HomePage({ params }: HomePageProps) {
                   <span>دعم تجريبي لـ ٣ جهات شريكة</span>
                 </li>
               </ul>
-              <a className="roadmap-card-cta" href="#how-it-works">
-                كن جهة شريكة
-                <ArrowLeft />
-              </a>
             </article>
 
             {/* Phase 2 — outline */}
@@ -1777,27 +1772,27 @@ export default async function HomePage({ params }: HomePageProps) {
                 <span className="roadmap-card-when">Q2 · Q3 ٢٠٢٧</span>
               </div>
               <h3 className="roadmap-card-title">التكامل والتوسعة</h3>
-              <p className="roadmap-card-tagline">دخول مُطابق إلى خط الإنتاج اليومي للجهات.</p>
+              <p className="roadmap-card-tagline">توسيع مُطابق ليناسب بنية الجهة الكاملة ومتطلباتها السيادية.</p>
               <ul className="roadmap-card-features">
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>تكامل CI/CD (GitHub Actions، GitLab)</span>
+                  <span>تسجيل دخول موحَّد عبر النفاذ الوطني للجهات الحكومية</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>ربط Nafath / SSO للجهات الحكومية</span>
+                  <span>تقارير بهويّة جهتكم — شعار وألوان واسم نطاق على كل ملف</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>Webhooks للأنظمة الداخلية</span>
+                  <span>لوحة قيادة موحَّدة لجميع منصات الجهة</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>تقارير بيضاء (white-label)</span>
+                  <span>قواعد فحص قطاعية مخصَّصة (تعليم، صحة، نقل...)</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>طبقة self-serve بالكارت</span>
+                  <span>خيار النشر داخل شبكتكم للجهات السيادية</span>
                 </li>
               </ul>
             </article>
