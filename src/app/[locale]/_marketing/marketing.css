@@ -41,7 +41,7 @@ html:has(.mtb-marketing) body {
   border-bottom: 1px solid var(--border-muted);
 }
 .mtb-marketing .nav-in { display: flex; align-items: center; gap: 28px; height: 72px; }
-.mtb-marketing .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.mtb-marketing .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
 .mtb-marketing .brand .lg { width: 34px; height: 34px; border-radius: 8px; background: var(--sa-600); display: grid; place-items: center; }
 .mtb-marketing .brand .lg svg { width: 20px; height: 20px; }
 .mtb-marketing .brand b { font: 600 16px/1 var(--font-ar); color: var(--fg-strong); }
