@@ -88,24 +88,49 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  // Tiny inline i18n helper — keeps copy next to markup instead of
+  // pulling every string through messages JSON. Direct translation of
+  // the Arabic source, formal DGA tone preserved.
+  const t = (ar: string, en: string) => (locale === "en" ? en : ar);
+  const isAR = locale !== "en";
+  const dir = isAR ? "rtl" : "ltr";
+  const lang = isAR ? "ar" : "en";
+
   return (
-    <div className="mtb-marketing" dir="rtl" lang="ar">
+    <div className="mtb-marketing" dir={dir} lang={lang}>
       <MarketingReveal />
-      {/* Nav — minimal: brand on RTL start (right), language + theme on end (left) */}
+      {/* Nav — minimal: brand on reading-start side, language + theme on end */}
       <header className="nav">
         <div className="wrap nav-in">
-          <a className="brand">
+          <a className="brand" href={`${ASSET}/${locale}/`}>
             <BrandMark />
             <span>
-              <b>مُطابق كلاود</b> <span className="name-en">Mutabiq</span>
+              <b>{t("مُطابق كلاود", "Mutabiq Cloud")}</b>{" "}
+              <span className="name-en">{t("Mutabiq", "مُطابق")}</span>
             </span>
           </a>
           <div className="nav-cta">
-            <div className="lang" role="group" aria-label="اللغة">
-              <button className="on" aria-pressed="true">AR</button>
-              <button aria-pressed="false">EN</button>
+            <div className="lang" role="group" aria-label={t("اللغة", "Language")}>
+              <a
+                href={`${ASSET}/ar/`}
+                className={isAR ? "on" : ""}
+                aria-pressed={isAR}
+              >
+                AR
+              </a>
+              <a
+                href={`${ASSET}/en/`}
+                className={!isAR ? "on" : ""}
+                aria-pressed={!isAR}
+              >
+                EN
+              </a>
             </div>
-            <button className="nav-theme" aria-label="تبديل الوضع الليلي" title="الوضع الليلي">
+            <button
+              className="nav-theme"
+              aria-label={t("تبديل الوضع الليلي", "Toggle dark mode")}
+              title={t("الوضع الليلي", "Dark mode")}
+            >
               <Sun />
             </button>
           </div>
@@ -118,40 +143,39 @@ export default async function HomePage({ params }: HomePageProps) {
           <div>
             <span className="eyebrow">
               <span className="dot" />
-              مبني على دليل DXMI 2026 الرسمي · v5.0
+              {t("مبني على دليل DXMI 2026 الرسمي · v5.0", "Built on the official DXMI 2026 guide · v5.0")}
             </span>
             <h1>
-              اعرف درجة{" "}
+              {t("اعرف درجة ", "Know your ")}
               {/* Word rotator — cycles DXMI → امتثالك → تجربتك → موقعك on a
                   12s loop. inline-grid stacks all 4 words in the same cell
                   so the layout never shifts; each word fades in/out via
                   staggered animation-delays (0/3/6/9s) into a 4×3s slot. */}
               <span className="word-rotator" aria-live="polite">
                 <em className="wr-word wr-1">DXMI</em>
-                <em className="wr-word wr-2">امتثالك</em>
-                <em className="wr-word wr-3">تجربتك</em>
-                <em className="wr-word wr-4">موقعك</em>
+                <em className="wr-word wr-2">{t("امتثالك", "compliance")}</em>
+                <em className="wr-word wr-3">{t("تجربتك", "experience")}</em>
+                <em className="wr-word wr-4">{t("موقعك", "site")}</em>
               </span>
-              {" "}لموقعك — قبل المقيِّم الرسمي.
+              {t(" لموقعك — قبل المقيِّم الرسمي.", " score — before the official assessor.")}
             </h1>
             <p className="lede">
-              منصة سعودية لتدقيق امتثال DXMI 2026 آليًا. أكثر من 70 قاعدة موزَّعة على المحاور الأربعة،
-              كل ملاحظة مرتبطة ببند رسمي من الدليل — بأدلة علاج تفصيلية بالعربية الفصحى.
+              {t("منصة سعودية لتدقيق امتثال DXMI 2026 آليًا. أكثر من 70 قاعدة موزَّعة على المحاور الأربعة، كل ملاحظة مرتبطة ببند رسمي من الدليل — بأدلة علاج تفصيلية بالعربية الفصحى.", "A Saudi platform for automated DXMI 2026 compliance auditing. Over 70 rules distributed across the four axes, every finding linked to an official clause from the guide — with detailed remediation guidance in formal Arabic.")}
             </p>
             {/* Stat chips — three scannable proof points, staggered fade-in
                 after the lede so they read as "claims → proof" rhythm. */}
             <div className="hero-chips">
               <span className="hero-chip">
                 <span className="hero-chip-ic"><ListChecks /></span>
-                <span><b>+70</b> قاعدة آلية</span>
+                <span><b>+70</b> {t("قاعدة آلية", "automated rules")}</span>
               </span>
               <span className="hero-chip">
                 <span className="hero-chip-ic"><Layers /></span>
-                <span><b>4</b> محاور DXMI</span>
+                <span><b>4</b> {t("محاور DXMI", "DXMI axes")}</span>
               </span>
               <span className="hero-chip">
                 <span className="hero-chip-ic"><Languages /></span>
-                <span>تقرير بالعربية</span>
+                <span>{t("تقرير بالعربية", "Arabic report")}</span>
               </span>
             </div>
             {/* Primary CTA — download presentation deck. Secondary CTA
@@ -164,7 +188,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 download="Mutabiq-Cloud-Presentation.pdf"
               >
                 <span className="hero-cta-ic"><Download /></span>
-                <span className="hero-cta-text">تحميل العرض التقديمي</span>
+                <span className="hero-cta-text">{t("تحميل العرض التقديمي", "Download the presentation")}</span>
                 <span className="hero-cta-meta">PDF</span>
               </a>
             </div>
@@ -172,13 +196,13 @@ export default async function HomePage({ params }: HomePageProps) {
               <span className="ck">
                 <Check />
               </span>
-              <span>كل ملاحظة مرتبطة ببند رسمي من DGA · لا تنبيهات بدون مرجع</span>
+              <span>{t("كل ملاحظة مرتبطة ببند رسمي من DGA · لا تنبيهات بدون مرجع", "Every finding linked to an official DGA clause · no alerts without a reference")}</span>
             </div>
           </div>
           <div className="hero-card">
             <div className="hc-head">
               <span className="hc-dot" />
-              <b>تقرير التدقيق · moe.gov.sa</b>
+              <b>{t("تقرير التدقيق · moe.gov.sa", "Audit report · moe.gov.sa")}</b>
               <span className="meta">DXMI 2026</span>
             </div>
             <div className="hc-score">
@@ -194,7 +218,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 {/* Trend pill at top-right — improvement vs previous audit.
                     Pops in after the score count finishes, signaling
                     progress momentum. */}
-                <span className="score-trend" aria-label="تحسن +5 نقاط منذ آخر تدقيق">
+                <span className="score-trend" aria-label={t("تحسن +5 نقاط منذ آخر تدقيق", "+5 points improvement since last audit")}>
                   <span className="score-trend-arrow">↑</span>
                   <span className="score-trend-value">5+</span>
                 </span>
@@ -205,25 +229,25 @@ export default async function HomePage({ params }: HomePageProps) {
               <ul>
                 <li data-level="72" style={{ ["--lvl" as string]: "72%" }}>
                   <i />
-                  <span className="lbl">الإتاحة</span>
+                  <span className="lbl">{t("الإتاحة", "Accessibility")}</span>
                   <span className="bar"><span className="bar-fill" /></span>
                   <span className="v" data-counter="72" data-counter-delay="850" data-counter-duration="900">72</span>
                 </li>
                 <li data-level="88" style={{ ["--lvl" as string]: "88%" }}>
                   <i />
-                  <span className="lbl">قابلية الاستخدام</span>
+                  <span className="lbl">{t("قابلية الاستخدام", "Usability")}</span>
                   <span className="bar"><span className="bar-fill" /></span>
                   <span className="v" data-counter="88" data-counter-delay="950" data-counter-duration="900">88</span>
                 </li>
                 <li data-level="64" style={{ ["--lvl" as string]: "64%" }}>
                   <i />
-                  <span className="lbl">الأداء</span>
+                  <span className="lbl">{t("الأداء", "Performance")}</span>
                   <span className="bar"><span className="bar-fill" /></span>
                   <span className="v" data-counter="64" data-counter-delay="1050" data-counter-duration="900">64</span>
                 </li>
                 <li data-level="91" style={{ ["--lvl" as string]: "91%" }}>
                   <i />
-                  <span className="lbl">التقنية</span>
+                  <span className="lbl">{t("التقنية", "Technology")}</span>
                   <span className="bar"><span className="bar-fill" /></span>
                   <span className="v" data-counter="91" data-counter-delay="1150" data-counter-duration="900">91</span>
                 </li>
@@ -234,21 +258,21 @@ export default async function HomePage({ params }: HomePageProps) {
                 <span className="ic">
                   <AlertCircle />
                 </span>
-                <b>نقص سمة lang على html</b>
+                <b>{t("نقص سمة lang على html", "Missing lang attribute on html")}</b>
                 <span className="tag">DGA · A-01</span>
               </div>
               <div className="hc-fnd warn">
                 <span className="ic">
                   <AlertTriangle />
                 </span>
-                <b>LCP يتجاوز 3 ثوانٍ</b>
+                <b>{t("LCP يتجاوز 3 ثوانٍ", "LCP exceeds 3 seconds")}</b>
                 <span className="tag">DGA · P-02</span>
               </div>
               <div className="hc-fnd ok">
                 <span className="ic">
                   <Check />
                 </span>
-                <b>دعم RTL كامل</b>
+                <b>{t("دعم RTL كامل", "Full RTL support")}</b>
                 <span className="tag">DGA · U-05</span>
               </div>
             </div>
@@ -258,11 +282,11 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="hc-footer">
               <span className="hc-footer-item">
                 <Clock />
-                <span>منذ ٣ دقائق</span>
+                <span>{t("منذ ٣ دقائق", "3 minutes ago")}</span>
               </span>
               <span className="hc-footer-divider" aria-hidden />
               <span className="hc-footer-item">
-                <span><b>12</b> صفحة فُحصت</span>
+                <span><b>12</b> {t("صفحة فُحصت", "pages scanned")}</span>
               </span>
               <span className="hc-footer-divider" aria-hidden />
               <span className="hc-footer-item hc-footer-version">DXMI v5.0</span>
@@ -275,18 +299,18 @@ export default async function HomePage({ params }: HomePageProps) {
       <div className="logos">
         <div className="wrap">
           <div className="logos-header">
-            <span className="logos-count" aria-label="أكثر من ستين جهة حكومية">
+            <span className="logos-count" aria-label={t("أكثر من ستين جهة حكومية", "More than sixty government entities")}>
               <span className="logos-count-plus">+</span>
               <span className="logos-count-num">60</span>
             </span>
             <div className="logos-header-text">
-              <b>جهة حكومية في نطاق معايير DGA</b>
-              <span>وزارات وهيئات وصناديق ومراكز خاضعة لإشراف هيئة الحكومة الرقمية</span>
+              <b>{t("جهة حكومية في نطاق معايير DGA", "Government entities within the scope of DGA standards")}</b>
+              <span>{t("وزارات وهيئات وصناديق ومراكز خاضعة لإشراف هيئة الحكومة الرقمية", "Ministries, authorities, funds, and centers under the supervision of the Digital Government Authority")}</span>
             </div>
           </div>
         </div>
         <div className="logos-strip">
-          <div className="logos-track" aria-label="جهات حكومية تستخدم معايير DGA">
+          <div className="logos-track" aria-label={t("جهات حكومية تستخدم معايير DGA", "Government entities using DGA standards")}>
             {[0, 1].map((dup) => (
               <div key={dup} aria-hidden={dup === 1} style={{ display: "contents" }}>
                 {/* `tight` = SVG has a square viewBox with internal padding
@@ -303,28 +327,28 @@ export default async function HomePage({ params }: HomePageProps) {
                     wide marks, so they get a tighter height clamp to balance
                     the row visually. */}
                 {[
-                  { slug: "cst",  ar: "هيئة الاتصالات والفضاء والتقنية" },
-                  { slug: "saso", ar: "المواصفات السعودية" },
-                  { slug: "ncc",  ar: "المركز السعودي للتنافسية" },
-                  { slug: "nic",  ar: "مركز المعلومات الوطني" },
-                  { slug: "sar",  ar: "الخطوط السعودية الحديدية" },
-                  { slug: "sfd",  ar: "الصندوق السعودي للتنمية" },
-                  { slug: "ndf",  ar: "صندوق التنمية الوطني" },
-                  { slug: "sca",  ar: "الهيئة السعودية للمقاولين" },
-                  { slug: "gea",  ar: "الهيئة العامة للترفيه" },
-                  { slug: "seda", ar: "هيئة تنمية الصادرات السعودية" },
-                  { slug: "balady", dense: true, ar: "منصة بلدي" },
-                  { slug: "sdaia",  dense: true, ar: "سدايا" },
-                  { slug: "rega",   dense: true, ar: "الهيئة العامة للعقار" },
-                  { slug: "kku",    dense: true, ar: "جامعة الملك خالد" },
-                  { slug: "mim",    dense: true, ar: "وزارة الصناعة والثروة المعدنية" },
-                  { slug: "misa",   dense: true, ar: "وزارة الاستثمار" },
+                  { slug: "cst",  ar: "هيئة الاتصالات والفضاء والتقنية", en: "Communications, Space & Technology Commission" },
+                  { slug: "saso", ar: "المواصفات السعودية", en: "Saudi Standards, Metrology and Quality Org" },
+                  { slug: "ncc",  ar: "المركز السعودي للتنافسية", en: "Saudi National Competitiveness Center" },
+                  { slug: "nic",  ar: "مركز المعلومات الوطني", en: "National Information Center" },
+                  { slug: "sar",  ar: "الخطوط السعودية الحديدية", en: "Saudi Arabia Railways" },
+                  { slug: "sfd",  ar: "الصندوق السعودي للتنمية", en: "Saudi Fund for Development" },
+                  { slug: "ndf",  ar: "صندوق التنمية الوطني", en: "National Development Fund" },
+                  { slug: "sca",  ar: "الهيئة السعودية للمقاولين", en: "Saudi Contractors Authority" },
+                  { slug: "gea",  ar: "الهيئة العامة للترفيه", en: "General Entertainment Authority" },
+                  { slug: "seda", ar: "هيئة تنمية الصادرات السعودية", en: "Saudi Export Development Authority" },
+                  { slug: "balady", dense: true, ar: "منصة بلدي", en: "Balady Platform" },
+                  { slug: "sdaia",  dense: true, ar: "سدايا", en: "SDAIA" },
+                  { slug: "rega",   dense: true, ar: "الهيئة العامة للعقار", en: "Real Estate General Authority" },
+                  { slug: "kku",    dense: true, ar: "جامعة الملك خالد", en: "King Khalid University" },
+                  { slug: "mim",    dense: true, ar: "وزارة الصناعة والثروة المعدنية", en: "Ministry of Industry and Mineral Resources" },
+                  { slug: "misa",   dense: true, ar: "وزارة الاستثمار", en: "Ministry of Investment" },
                 ].map((logo) => (
-                  <div key={logo.slug} className="logo-item" data-slug={logo.slug} title={logo.ar}>
+                  <div key={logo.slug} className="logo-item" data-slug={logo.slug} title={t(logo.ar, logo.en)}>
                     <img
                       className={`logo-mark${logo.dense ? " is-dense" : ""}`}
                       src={`${ASSET}/logos/${logo.slug}.svg`}
-                      alt={logo.ar}
+                      alt={t(logo.ar, logo.en)}
                       loading="lazy"
                     />
                   </div>
@@ -340,10 +364,10 @@ export default async function HomePage({ params }: HomePageProps) {
         <div className="wrap">
           <div className="problem-head" data-reveal>
             <div className="problem-eyebrow">
-              <span className="num">001 ·</span>المشكلة
+              <span className="num">001 ·</span>{t("المشكلة", "The Problem")}
             </div>
             <h2 className="problem-title">
-              مؤشر DXMI 2026 يطلب الكثير، وأدوات اليوم لا تكفي.
+              {t("مؤشر DXMI 2026 يطلب الكثير، وأدوات اليوم لا تكفي.", "DXMI 2026 demands a lot, and today's tools are not enough.")}
             </h2>
           </div>
           {/* 6 problems arranged in a 3×2 grid. Columns share a color
