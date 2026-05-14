@@ -88,24 +88,49 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  // Tiny inline i18n helper — keeps copy next to markup instead of
+  // pulling every string through messages JSON. Direct translation of
+  // the Arabic source, formal DGA tone preserved.
+  const t = (ar: string, en: string) => (locale === "en" ? en : ar);
+  const isAR = locale !== "en";
+  const dir = isAR ? "rtl" : "ltr";
+  const lang = isAR ? "ar" : "en";
+
   return (
-    <div className="mtb-marketing" dir="rtl" lang="ar">
+    <div className="mtb-marketing" dir={dir} lang={lang}>
       <MarketingReveal />
-      {/* Nav — minimal: brand on RTL start (right), language + theme on end (left) */}
+      {/* Nav — minimal: brand on reading-start side, language + theme on end */}
       <header className="nav">
         <div className="wrap nav-in">
-          <a className="brand">
+          <a className="brand" href={`${ASSET}/${locale}/`}>
             <BrandMark />
             <span>
-              <b>مُطابق كلاود</b> <span className="name-en">Mutabiq</span>
+              <b>{t("مُطابق كلاود", "Mutabiq Cloud")}</b>{" "}
+              <span className="name-en">{t("Mutabiq", "مُطابق")}</span>
             </span>
           </a>
           <div className="nav-cta">
-            <div className="lang" role="group" aria-label="اللغة">
-              <button className="on" aria-pressed="true">AR</button>
-              <button aria-pressed="false">EN</button>
+            <div className="lang" role="group" aria-label={t("اللغة", "Language")}>
+              <a
+                href={`${ASSET}/ar/`}
+                className={isAR ? "on" : ""}
+                aria-pressed={isAR}
+              >
+                AR
+              </a>
+              <a
+                href={`${ASSET}/en/`}
+                className={!isAR ? "on" : ""}
+                aria-pressed={!isAR}
+              >
+                EN
+              </a>
             </div>
-            <button className="nav-theme" aria-label="تبديل الوضع الليلي" title="الوضع الليلي">
+            <button
+              className="nav-theme"
+              aria-label={t("تبديل الوضع الليلي", "Toggle dark mode")}
+              title={t("الوضع الليلي", "Dark mode")}
+            >
               <Sun />
             </button>
           </div>
@@ -118,40 +143,39 @@ export default async function HomePage({ params }: HomePageProps) {
           <div>
             <span className="eyebrow">
               <span className="dot" />
-              مبني على دليل DXMI 2026 الرسمي · v5.0
+              {t("مبني على دليل DXMI 2026 الرسمي · v5.0", "Built on the official DXMI 2026 guide · v5.0")}
             </span>
             <h1>
-              اعرف درجة{" "}
+              {t("اعرف درجة ", "Know your ")}
               {/* Word rotator — cycles DXMI → امتثالك → تجربتك → موقعك on a
                   12s loop. inline-grid stacks all 4 words in the same cell
                   so the layout never shifts; each word fades in/out via
                   staggered animation-delays (0/3/6/9s) into a 4×3s slot. */}
               <span className="word-rotator" aria-live="polite">
                 <em className="wr-word wr-1">DXMI</em>
-                <em className="wr-word wr-2">امتثالك</em>
-                <em className="wr-word wr-3">تجربتك</em>
-                <em className="wr-word wr-4">موقعك</em>
+                <em className="wr-word wr-2">{t("امتثالك", "compliance")}</em>
+                <em className="wr-word wr-3">{t("تجربتك", "experience")}</em>
+                <em className="wr-word wr-4">{t("موقعك", "site")}</em>
               </span>
-              {" "}لموقعك — قبل المقيِّم الرسمي.
+              {t(" لموقعك — قبل المقيِّم الرسمي.", " score — before the official assessor.")}
             </h1>
             <p className="lede">
-              منصة سعودية لتدقيق امتثال DXMI 2026 آليًا. أكثر من 70 قاعدة موزَّعة على المحاور الأربعة،
-              كل ملاحظة مرتبطة ببند رسمي من الدليل — بأدلة علاج تفصيلية بالعربية الفصحى.
+              {t("منصة سعودية لتدقيق امتثال DXMI 2026 آليًا. أكثر من 70 قاعدة موزَّعة على المحاور الأربعة، كل ملاحظة مرتبطة ببند رسمي من الدليل — بأدلة علاج تفصيلية بالعربية الفصحى.", "A Saudi platform for automated DXMI 2026 compliance auditing. Over 70 rules distributed across the four axes, every finding linked to an official clause from the guide — with detailed remediation guidance in formal Arabic.")}
             </p>
             {/* Stat chips — three scannable proof points, staggered fade-in
                 after the lede so they read as "claims → proof" rhythm. */}
             <div className="hero-chips">
               <span className="hero-chip">
                 <span className="hero-chip-ic"><ListChecks /></span>
-                <span><b>+70</b> قاعدة آلية</span>
+                <span><b>+70</b> {t("قاعدة آلية", "automated rules")}</span>
               </span>
               <span className="hero-chip">
                 <span className="hero-chip-ic"><Layers /></span>
-                <span><b>4</b> محاور DXMI</span>
+                <span><b>4</b> {t("محاور DXMI", "DXMI axes")}</span>
               </span>
               <span className="hero-chip">
                 <span className="hero-chip-ic"><Languages /></span>
-                <span>تقرير بالعربية</span>
+                <span>{t("تقرير بالعربية", "Arabic report")}</span>
               </span>
             </div>
             {/* Primary CTA — download presentation deck. Secondary CTA
@@ -164,7 +188,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 download="Mutabiq-Cloud-Presentation.pdf"
               >
                 <span className="hero-cta-ic"><Download /></span>
-                <span className="hero-cta-text">تحميل العرض التقديمي</span>
+                <span className="hero-cta-text">{t("تحميل العرض التقديمي", "Download the presentation")}</span>
                 <span className="hero-cta-meta">PDF</span>
               </a>
             </div>
@@ -172,13 +196,13 @@ export default async function HomePage({ params }: HomePageProps) {
               <span className="ck">
                 <Check />
               </span>
-              <span>كل ملاحظة مرتبطة ببند رسمي من DGA · لا تنبيهات بدون مرجع</span>
+              <span>{t("كل ملاحظة مرتبطة ببند رسمي من DGA · لا تنبيهات بدون مرجع", "Every finding linked to an official DGA clause · no alerts without a reference")}</span>
             </div>
           </div>
           <div className="hero-card">
             <div className="hc-head">
               <span className="hc-dot" />
-              <b>تقرير التدقيق · moe.gov.sa</b>
+              <b>{t("تقرير التدقيق · moe.gov.sa", "Audit report · moe.gov.sa")}</b>
               <span className="meta">DXMI 2026</span>
             </div>
             <div className="hc-score">
@@ -194,7 +218,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 {/* Trend pill at top-right — improvement vs previous audit.
                     Pops in after the score count finishes, signaling
                     progress momentum. */}
-                <span className="score-trend" aria-label="تحسن +5 نقاط منذ آخر تدقيق">
+                <span className="score-trend" aria-label={t("تحسن +5 نقاط منذ آخر تدقيق", "+5 points improvement since last audit")}>
                   <span className="score-trend-arrow">↑</span>
                   <span className="score-trend-value">5+</span>
                 </span>
@@ -205,25 +229,25 @@ export default async function HomePage({ params }: HomePageProps) {
               <ul>
                 <li data-level="72" style={{ ["--lvl" as string]: "72%" }}>
                   <i />
-                  <span className="lbl">الإتاحة</span>
+                  <span className="lbl">{t("الإتاحة", "Accessibility")}</span>
                   <span className="bar"><span className="bar-fill" /></span>
                   <span className="v" data-counter="72" data-counter-delay="850" data-counter-duration="900">72</span>
                 </li>
                 <li data-level="88" style={{ ["--lvl" as string]: "88%" }}>
                   <i />
-                  <span className="lbl">قابلية الاستخدام</span>
+                  <span className="lbl">{t("قابلية الاستخدام", "Usability")}</span>
                   <span className="bar"><span className="bar-fill" /></span>
                   <span className="v" data-counter="88" data-counter-delay="950" data-counter-duration="900">88</span>
                 </li>
                 <li data-level="64" style={{ ["--lvl" as string]: "64%" }}>
                   <i />
-                  <span className="lbl">الأداء</span>
+                  <span className="lbl">{t("الأداء", "Performance")}</span>
                   <span className="bar"><span className="bar-fill" /></span>
                   <span className="v" data-counter="64" data-counter-delay="1050" data-counter-duration="900">64</span>
                 </li>
                 <li data-level="91" style={{ ["--lvl" as string]: "91%" }}>
                   <i />
-                  <span className="lbl">التقنية</span>
+                  <span className="lbl">{t("التقنية", "Technology")}</span>
                   <span className="bar"><span className="bar-fill" /></span>
                   <span className="v" data-counter="91" data-counter-delay="1150" data-counter-duration="900">91</span>
                 </li>
@@ -234,21 +258,21 @@ export default async function HomePage({ params }: HomePageProps) {
                 <span className="ic">
                   <AlertCircle />
                 </span>
-                <b>نقص سمة lang على html</b>
+                <b>{t("نقص سمة lang على html", "Missing lang attribute on html")}</b>
                 <span className="tag">DGA · A-01</span>
               </div>
               <div className="hc-fnd warn">
                 <span className="ic">
                   <AlertTriangle />
                 </span>
-                <b>LCP يتجاوز 3 ثوانٍ</b>
+                <b>{t("LCP يتجاوز 3 ثوانٍ", "LCP exceeds 3 seconds")}</b>
                 <span className="tag">DGA · P-02</span>
               </div>
               <div className="hc-fnd ok">
                 <span className="ic">
                   <Check />
                 </span>
-                <b>دعم RTL كامل</b>
+                <b>{t("دعم RTL كامل", "Full RTL support")}</b>
                 <span className="tag">DGA · U-05</span>
               </div>
             </div>
@@ -258,11 +282,11 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="hc-footer">
               <span className="hc-footer-item">
                 <Clock />
-                <span>منذ ٣ دقائق</span>
+                <span>{t("منذ ٣ دقائق", "3 minutes ago")}</span>
               </span>
               <span className="hc-footer-divider" aria-hidden />
               <span className="hc-footer-item">
-                <span><b>12</b> صفحة فُحصت</span>
+                <span><b>12</b> {t("صفحة فُحصت", "pages scanned")}</span>
               </span>
               <span className="hc-footer-divider" aria-hidden />
               <span className="hc-footer-item hc-footer-version">DXMI v5.0</span>
@@ -275,18 +299,18 @@ export default async function HomePage({ params }: HomePageProps) {
       <div className="logos">
         <div className="wrap">
           <div className="logos-header">
-            <span className="logos-count" aria-label="أكثر من ستين جهة حكومية">
+            <span className="logos-count" aria-label={t("أكثر من ستين جهة حكومية", "More than sixty government entities")}>
               <span className="logos-count-plus">+</span>
               <span className="logos-count-num">60</span>
             </span>
             <div className="logos-header-text">
-              <b>جهة حكومية في نطاق معايير DGA</b>
-              <span>وزارات وهيئات وصناديق ومراكز خاضعة لإشراف هيئة الحكومة الرقمية</span>
+              <b>{t("جهة حكومية في نطاق معايير DGA", "Government entities within the scope of DGA standards")}</b>
+              <span>{t("وزارات وهيئات وصناديق ومراكز خاضعة لإشراف هيئة الحكومة الرقمية", "Ministries, authorities, funds, and centers under the supervision of the Digital Government Authority")}</span>
             </div>
           </div>
         </div>
         <div className="logos-strip">
-          <div className="logos-track" aria-label="جهات حكومية تستخدم معايير DGA">
+          <div className="logos-track" aria-label={t("جهات حكومية تستخدم معايير DGA", "Government entities using DGA standards")}>
             {[0, 1].map((dup) => (
               <div key={dup} aria-hidden={dup === 1} style={{ display: "contents" }}>
                 {/* `tight` = SVG has a square viewBox with internal padding
@@ -303,28 +327,28 @@ export default async function HomePage({ params }: HomePageProps) {
                     wide marks, so they get a tighter height clamp to balance
                     the row visually. */}
                 {[
-                  { slug: "cst",  ar: "هيئة الاتصالات والفضاء والتقنية" },
-                  { slug: "saso", ar: "المواصفات السعودية" },
-                  { slug: "ncc",  ar: "المركز السعودي للتنافسية" },
-                  { slug: "nic",  ar: "مركز المعلومات الوطني" },
-                  { slug: "sar",  ar: "الخطوط السعودية الحديدية" },
-                  { slug: "sfd",  ar: "الصندوق السعودي للتنمية" },
-                  { slug: "ndf",  ar: "صندوق التنمية الوطني" },
-                  { slug: "sca",  ar: "الهيئة السعودية للمقاولين" },
-                  { slug: "gea",  ar: "الهيئة العامة للترفيه" },
-                  { slug: "seda", ar: "هيئة تنمية الصادرات السعودية" },
-                  { slug: "balady", dense: true, ar: "منصة بلدي" },
-                  { slug: "sdaia",  dense: true, ar: "سدايا" },
-                  { slug: "rega",   dense: true, ar: "الهيئة العامة للعقار" },
-                  { slug: "kku",    dense: true, ar: "جامعة الملك خالد" },
-                  { slug: "mim",    dense: true, ar: "وزارة الصناعة والثروة المعدنية" },
-                  { slug: "misa",   dense: true, ar: "وزارة الاستثمار" },
+                  { slug: "cst",  ar: "هيئة الاتصالات والفضاء والتقنية", en: "Communications, Space & Technology Commission" },
+                  { slug: "saso", ar: "المواصفات السعودية", en: "Saudi Standards, Metrology and Quality Org" },
+                  { slug: "ncc",  ar: "المركز السعودي للتنافسية", en: "Saudi National Competitiveness Center" },
+                  { slug: "nic",  ar: "مركز المعلومات الوطني", en: "National Information Center" },
+                  { slug: "sar",  ar: "الخطوط السعودية الحديدية", en: "Saudi Arabia Railways" },
+                  { slug: "sfd",  ar: "الصندوق السعودي للتنمية", en: "Saudi Fund for Development" },
+                  { slug: "ndf",  ar: "صندوق التنمية الوطني", en: "National Development Fund" },
+                  { slug: "sca",  ar: "الهيئة السعودية للمقاولين", en: "Saudi Contractors Authority" },
+                  { slug: "gea",  ar: "الهيئة العامة للترفيه", en: "General Entertainment Authority" },
+                  { slug: "seda", ar: "هيئة تنمية الصادرات السعودية", en: "Saudi Export Development Authority" },
+                  { slug: "balady", dense: true, ar: "منصة بلدي", en: "Balady Platform" },
+                  { slug: "sdaia",  dense: true, ar: "سدايا", en: "SDAIA" },
+                  { slug: "rega",   dense: true, ar: "الهيئة العامة للعقار", en: "Real Estate General Authority" },
+                  { slug: "kku",    dense: true, ar: "جامعة الملك خالد", en: "King Khalid University" },
+                  { slug: "mim",    dense: true, ar: "وزارة الصناعة والثروة المعدنية", en: "Ministry of Industry and Mineral Resources" },
+                  { slug: "misa",   dense: true, ar: "وزارة الاستثمار", en: "Ministry of Investment" },
                 ].map((logo) => (
-                  <div key={logo.slug} className="logo-item" data-slug={logo.slug} title={logo.ar}>
+                  <div key={logo.slug} className="logo-item" data-slug={logo.slug} title={t(logo.ar, logo.en)}>
                     <img
                       className={`logo-mark${logo.dense ? " is-dense" : ""}`}
                       src={`${ASSET}/logos/${logo.slug}.svg`}
-                      alt={logo.ar}
+                      alt={t(logo.ar, logo.en)}
                       loading="lazy"
                     />
                   </div>
@@ -340,10 +364,10 @@ export default async function HomePage({ params }: HomePageProps) {
         <div className="wrap">
           <div className="problem-head" data-reveal>
             <div className="problem-eyebrow">
-              <span className="num">001 ·</span>المشكلة
+              <span className="num">001 ·</span>{t("المشكلة", "The Problem")}
             </div>
             <h2 className="problem-title">
-              مؤشر DXMI 2026 يطلب الكثير، وأدوات اليوم لا تكفي.
+              {t("مؤشر DXMI 2026 يطلب الكثير، وأدوات اليوم لا تكفي.", "DXMI 2026 demands a lot, and today's tools are not enough.")}
             </h2>
           </div>
           {/* 6 problems arranged in a 3×2 grid. Columns share a color
@@ -360,50 +384,50 @@ export default async function HomePage({ params }: HomePageProps) {
               <span className="ic">
                 <AlertOctagon />
               </span>
-              <span className="label">غير ملائم</span>
-              <h3>أدوات لا تفهم السياق</h3>
-              <p>الأدوات العالمية تقيس WCAG وLighthouse، لكنها لا تعرف DXMI 2026، ولا تدعم العربية بشكل أصيل، ولا تفهم البنود الإلزامية لهيئة الحكومة الرقمية.</p>
+              <span className="label">{t("غير ملائم", "Mismatched")}</span>
+              <h3>{t("أدوات لا تفهم السياق", "Tools that don't understand the context")}</h3>
+              <p>{t("الأدوات العالمية تقيس WCAG وLighthouse، لكنها لا تعرف DXMI 2026، ولا تدعم العربية بشكل أصيل، ولا تفهم البنود الإلزامية لهيئة الحكومة الرقمية.", "Global tools measure WCAG and Lighthouse, but they don't know DXMI 2026, don't natively support Arabic, and don't understand the mandatory clauses of the Digital Government Authority.")}</p>
             </div>
             <div className="pcard med" data-reveal>
               <span className="ic">
                 <Receipt />
               </span>
-              <span className="label">مكلف</span>
-              <h3>تدقيق يدوي بتكلفة عالية</h3>
-              <p>كل تقييم يتم عبر استشارات خارجية تستهلك ميزانية الجهة، وتعطي صورة لحظية واحدة فقط بعد شهور من العمل.</p>
+              <span className="label">{t("مكلف", "Costly")}</span>
+              <h3>{t("تدقيق يدوي بتكلفة عالية", "High-cost manual auditing")}</h3>
+              <p>{t("كل تقييم يتم عبر استشارات خارجية تستهلك ميزانية الجهة، وتعطي صورة لحظية واحدة فقط بعد شهور من العمل.", "Every assessment runs through external consultants who consume the entity's budget and deliver only a single snapshot after months of work.")}</p>
             </div>
             <div className="pcard late" data-reveal>
               <span className="ic">
                 <Clock />
               </span>
-              <span className="label">متأخر</span>
-              <h3>يُكتشف بعد التسليم</h3>
-              <p>المخالفات تظهر في تقييم الهيئة السنوي — حين يصبح إصلاحها مكلفًا ويستغرق شهورًا ويترك أثرًا على الترتيب.</p>
+              <span className="label">{t("متأخر", "Late")}</span>
+              <h3>{t("يُكتشف بعد التسليم", "Discovered after delivery")}</h3>
+              <p>{t("المخالفات تظهر في تقييم الهيئة السنوي — حين يصبح إصلاحها مكلفًا ويستغرق شهورًا ويترك أثرًا على الترتيب.", "Violations surface in the Authority's annual assessment — when remediation becomes costly, takes months, and leaves a mark on the ranking.")}</p>
             </div>
             {/* Row 2 — structural pains */}
             <div className="pcard bad" data-reveal>
               <span className="ic">
                 <Scale />
               </span>
-              <span className="label">متضارب</span>
-              <h3>نتائج تختلف من مراجع لآخر</h3>
-              <p>نفس الموقع، نفس البنود، وثلاثة استشاريين بثلاث درجات. لا توجد طريقة لإثبات أن التقييم موضوعي وقابل للتكرار.</p>
+              <span className="label">{t("متضارب", "Inconsistent")}</span>
+              <h3>{t("نتائج تختلف من مراجع لآخر", "Results that differ from one reviewer to another")}</h3>
+              <p>{t("نفس الموقع، نفس البنود، وثلاثة استشاريين بثلاث درجات. لا توجد طريقة لإثبات أن التقييم موضوعي وقابل للتكرار.", "Same site, same clauses, and three consultants with three different scores. There is no way to prove that the assessment is objective and reproducible.")}</p>
             </div>
             <div className="pcard med" data-reveal>
               <span className="ic">
                 <Unlink />
               </span>
-              <span className="label">مفصول</span>
-              <h3>التصميم والإنتاج في عالمين</h3>
-              <p>تُدقَّق التصاميم في Figma بمعيار، ويُدقَّق الموقع في الإنتاج بمعيار آخر. الفجوة بين الاثنين تظهر بعد الإطلاق.</p>
+              <span className="label">{t("مفصول", "Disconnected")}</span>
+              <h3>{t("التصميم والإنتاج في عالمين", "Design and production in two separate worlds")}</h3>
+              <p>{t("تُدقَّق التصاميم في Figma بمعيار، ويُدقَّق الموقع في الإنتاج بمعيار آخر. الفجوة بين الاثنين تظهر بعد الإطلاق.", "Designs are audited in Figma against one standard, and the site is audited in production against another. The gap between the two surfaces after launch.")}</p>
             </div>
             <div className="pcard late" data-reveal>
               <span className="ic">
                 <EyeOff />
               </span>
-              <span className="label">بدون رقابة</span>
-              <h3>لا أحد يراقب بين التقييمات</h3>
-              <p>بين تقييمين سنويين، يتحرّك الموقع، تتغيّر الواجهات، وتدخل ميزات جديدة — كل ذلك دون رقابة على الالتزام.</p>
+              <span className="label">{t("بدون رقابة", "Unmonitored")}</span>
+              <h3>{t("لا أحد يراقب بين التقييمات", "No one is watching between assessments")}</h3>
+              <p>{t("بين تقييمين سنويين، يتحرّك الموقع، تتغيّر الواجهات، وتدخل ميزات جديدة — كل ذلك دون رقابة على الالتزام.", "Between two annual assessments, the site moves, interfaces change, and new features ship — all without compliance oversight.")}</p>
             </div>
           </div>
         </div>
@@ -415,12 +439,12 @@ export default async function HomePage({ params }: HomePageProps) {
       <section className="s funnel">
         <div className="wrap">
           <div className="s-head" data-reveal>
-            <div className="s-kicker">002 · من الفوضى إلى الالتزام</div>
+            <div className="s-kicker">{t("002 · من الفوضى إلى الالتزام", "002 · From chaos to compliance")}</div>
             <h2 className="s-title">
-              مخالفات تدخل · <em>تقرير مُطابق يخرج</em>
+              {t("مخالفات تدخل · ", "Violations in · ")}<em>{t("تقرير مُطابق يخرج", "A compliant report out")}</em>
             </h2>
             <p className="s-lede">
-              مُطابق يحوّل قائمة المخالفات المتراكمة إلى تقرير DXMI مرتبط بالمعيار الرسمي — في تشغيل آلي واحد، يكشف لك أين أنت من Advanced قبل التقييم.
+              {t("مُطابق يحوّل قائمة المخالفات المتراكمة إلى تقرير DXMI مرتبط بالمعيار الرسمي — في تشغيل آلي واحد، يكشف لك أين أنت من Advanced قبل التقييم.", "Mutabiq turns a backlog of violations into a DXMI report linked to the official standard — in a single automated run that shows you where you stand against Advanced before the assessment.")}
             </p>
           </div>
 
@@ -431,21 +455,21 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="funnel-status">
               <span className="funnel-status-chip">
                 <span className="funnel-status-dot" />
-                تدقيق آلي يعمل
+                {t("تدقيق آلي يعمل", "Automated audit running")}
               </span>
               <span className="funnel-status-divider" aria-hidden />
-              <span className="funnel-status-stat"><b>+70</b><span>قاعدة فُحصت</span></span>
+              <span className="funnel-status-stat"><b>+70</b><span>{t("قاعدة فُحصت", "rules checked")}</span></span>
               <span className="funnel-status-divider" aria-hidden />
-              <span className="funnel-status-stat"><b>+24</b><span>نقطة</span></span>
+              <span className="funnel-status-stat"><b>+24</b><span>{t("نقطة", "points")}</span></span>
               <span className="funnel-status-divider" aria-hidden />
-              <span className="funnel-status-stat"><b>14s</b><span>الزمن</span></span>
+              <span className="funnel-status-stat"><b>14s</b><span>{t("الزمن", "duration")}</span></span>
             </div>
 
             {/* Start side (RTL right) — issues entering */}
             <div className="funnel-side funnel-in">
               <div className="funnel-side-label funnel-side-label-issue">
                 <span className="funnel-side-label-dot" />
-                قبل التدقيق · 5 مخالفات حرجة
+                {t("قبل التدقيق · 5 مخالفات حرجة", "Before audit · 5 critical violations")}
               </div>
               <div className="funnel-mockbrowser">
                 <div className="funnel-mb-chrome">
@@ -458,7 +482,7 @@ export default async function HomePage({ params }: HomePageProps) {
                     <Lock />
                     moe.gov.sa
                   </span>
-                  <span className="funnel-mb-status">جاري التدقيق</span>
+                  <span className="funnel-mb-status">{t("جاري التدقيق", "Auditing")}</span>
                 </div>
                 <div className="funnel-mb-body">
                   <div className="funnel-mb-hero">
@@ -481,27 +505,27 @@ export default async function HomePage({ params }: HomePageProps) {
               </div>
               <div className="funnel-tag issue f1">
                 <span className="tag-ic"><AlertOctagon /></span>
-                <span>نقص lang على html</span>
+                <span>{t("نقص lang على html", "Missing lang on html")}</span>
                 <span className="tag-code">A-01</span>
               </div>
               <div className="funnel-tag issue f2">
                 <span className="tag-ic warn"><AlertTriangle /></span>
-                <span>LCP يتجاوز 3 ثوان</span>
+                <span>{t("LCP يتجاوز 3 ثوان", "LCP exceeds 3 seconds")}</span>
                 <span className="tag-code">P-02</span>
               </div>
               <div className="funnel-tag issue f3">
                 <span className="tag-ic"><AlertCircle /></span>
-                <span>تباين ألوان منخفض</span>
+                <span>{t("تباين ألوان منخفض", "Low color contrast")}</span>
                 <span className="tag-code">A-12</span>
               </div>
               <div className="funnel-tag issue f4">
                 <span className="tag-ic warn"><AlertTriangle /></span>
-                <span>Alt نصي مفقود</span>
+                <span>{t("Alt نصي مفقود", "Missing alt text")}</span>
                 <span className="tag-code">A-03</span>
               </div>
               <div className="funnel-tag issue f5">
                 <span className="tag-ic"><AlertOctagon /></span>
-                <span>نموذج بدون label</span>
+                <span>{t("نموذج بدون label", "Form without label")}</span>
                 <span className="tag-code">F-04</span>
               </div>
             </div>
@@ -524,22 +548,22 @@ export default async function HomePage({ params }: HomePageProps) {
               <svg className="funnel-core-ring" viewBox="0 0 88 88" aria-hidden>
                 <circle className="funnel-core-ring-progress" cx="44" cy="44" r="40" />
               </svg>
-              <span className="funnel-core-badge" title="مُطابق">
+              <span className="funnel-core-badge" title={t("مُطابق", "Mutabiq")}>
                 <BrandMark />
               </span>
               {/* Status chip above the badge — small "live" tag */}
               <span className="funnel-core-status" aria-live="polite">
                 <span className="funnel-core-status-dot" aria-hidden />
-                <span>يعالج · ٢ نشطة</span>
+                <span>{t("يعالج · ٢ نشطة", "Processing · 2 active")}</span>
               </span>
               {/* Transformation summary below the badge — anchors the
                   "5 violations → 0" story. Right number animates from
                   5 down to 0 across the cycle to mirror the absorption. */}
               <span className="funnel-core-summary" aria-label="five violations transformed to zero">
-                <b className="funnel-core-summary-from">٥</b>
+                <b className="funnel-core-summary-from">{t("٥", "5")}</b>
                 <span className="funnel-core-summary-arrow" aria-hidden>→</span>
-                <b className="funnel-core-summary-to">٠</b>
-                <span className="funnel-core-summary-label">مخالفة</span>
+                <b className="funnel-core-summary-to">{t("٠", "0")}</b>
+                <span className="funnel-core-summary-label">{t("مخالفة", "violations")}</span>
               </span>
               {/* Particle bursts — five small shockwave nodes timed to
                   fire at each issue tag's dissolution moment (90% of
@@ -556,13 +580,13 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="funnel-side funnel-out">
               <div className="funnel-side-label funnel-side-label-ok">
                 <BadgeCheck />
-                بعد · DGA Advanced
+                {t("بعد · DGA Advanced", "After · DGA Advanced")}
               </div>
               <div className="funnel-scorecard">
                 <div className="funnel-sc-head">
                   <span className="funnel-sc-brand">
                     <BadgeCheck />
-                    تقرير DGA
+                    {t("تقرير DGA", "DGA Report")}
                   </span>
                   <span className="funnel-sc-meta">DXMI 2026 · v5.0</span>
                 </div>
@@ -595,29 +619,29 @@ export default async function HomePage({ params }: HomePageProps) {
                 </div>
                 <ul className="funnel-sc-bars">
                   <li>
-                    <span className="funnel-sc-bar-label">الإتاحة</span>
+                    <span className="funnel-sc-bar-label">{t("الإتاحة", "Accessibility")}</span>
                     <span className="funnel-sc-bar-track"><span className="funnel-sc-bar-fill" style={{ width: "94%" }} /></span>
                     <span className="funnel-sc-bar-value">94</span>
                   </li>
                   <li>
-                    <span className="funnel-sc-bar-label">الأداء</span>
+                    <span className="funnel-sc-bar-label">{t("الأداء", "Performance")}</span>
                     <span className="funnel-sc-bar-track"><span className="funnel-sc-bar-fill" style={{ width: "90%" }} /></span>
                     <span className="funnel-sc-bar-value">90</span>
                   </li>
                   <li>
-                    <span className="funnel-sc-bar-label">التقنية</span>
+                    <span className="funnel-sc-bar-label">{t("التقنية", "Technology")}</span>
                     <span className="funnel-sc-bar-track"><span className="funnel-sc-bar-fill" style={{ width: "96%" }} /></span>
                     <span className="funnel-sc-bar-value">96</span>
                   </li>
                 </ul>
                 <div className="funnel-sc-foot">
                   <span className="funnel-sc-foot-dot" />
-                  تم التحقق · موقع مُطابق
+                  {t("تم التحقق · موقع مُطابق", "Verified · Compliant site")}
                 </div>
               </div>
               <div className="funnel-tag ok o1">
                 <span className="tag-ic"><Check /></span>
-                <span>lang سليم</span>
+                <span>{t("lang سليم", "lang valid")}</span>
               </div>
               <div className="funnel-tag ok o2">
                 <span className="tag-ic"><Check /></span>
@@ -625,11 +649,11 @@ export default async function HomePage({ params }: HomePageProps) {
               </div>
               <div className="funnel-tag ok o3">
                 <span className="tag-ic"><Check /></span>
-                <span>تباين 7:1</span>
+                <span>{t("تباين 7:1", "Contrast 7:1")}</span>
               </div>
               <div className="funnel-tag ok o4">
                 <span className="tag-ic"><Check /></span>
-                <span>Alt كامل</span>
+                <span>{t("Alt كامل", "Alt complete")}</span>
               </div>
               <div className="funnel-tag ok o5">
                 <span className="tag-ic"><BadgeCheck /></span>
@@ -660,30 +684,30 @@ export default async function HomePage({ params }: HomePageProps) {
         <section className="s">
           <div className="wrap">
             <div className="s-head" data-reveal>
-              <div className="s-kicker">002 · كيف يعمل</div>
-              <h2 className="s-title">4 خطوات من الرابط إلى تقرير DGA Advanced</h2>
-              <p className="s-lede">بدون فريق إضافي، بدون استشاريين خارجيين، بدون جداول إكسل ترسلها بالإيميل.</p>
+              <div className="s-kicker">{t("002 · كيف يعمل", "002 · How it works")}</div>
+              <h2 className="s-title">{t("4 خطوات من الرابط إلى تقرير DGA Advanced", "4 steps from a URL to a DGA Advanced report")}</h2>
+              <p className="s-lede">{t("بدون فريق إضافي، بدون استشاريين خارجيين، بدون جداول إكسل ترسلها بالإيميل.", "No extra team, no external consultants, no Excel sheets sent by email.")}</p>
             </div>
             <div className="steps">
               <div className="step">
                 <span className="num">1</span>
-                <h3>تربط موقعك</h3>
-                <p>أدخل رابط الموقع الرسمي. نكتشف الصفحات تلقائيًا وننظّمها في مجموعات — حتى 100 صفحة لكل حملة.</p>
+                <h3>{t("تربط موقعك", "Connect your site")}</h3>
+                <p>{t("أدخل رابط الموقع الرسمي. نكتشف الصفحات تلقائيًا وننظّمها في مجموعات — حتى 100 صفحة لكل حملة.", "Enter the official site URL. We discover pages automatically and organize them into groups — up to 100 pages per campaign.")}</p>
               </div>
               <div className="step">
                 <span className="num">2</span>
-                <h3>ندقّق آليًا</h3>
-                <p>نُطبّق أكثر من 70 قاعدة من DXMI 2026 على موقعك بالعربية — نتيجة لكل قاعدة مع شواهد مرئية ومرجع DGA الرسمي.</p>
+                <h3>{t("ندقّق آليًا", "Audit automatically")}</h3>
+                <p>{t("نُطبّق أكثر من 70 قاعدة من DXMI 2026 على موقعك بالعربية — نتيجة لكل قاعدة مع شواهد مرئية ومرجع DGA الرسمي.", "We apply more than 70 DXMI 2026 rules to your site in Arabic — a result for each rule, with visual evidence and an official DGA reference.")}</p>
               </div>
               <div className="step">
                 <span className="num">3</span>
-                <h3>تقرير ثلاثي الزوايا</h3>
-                <p>تقرير واحد يخدم 3 جهات: رؤية للمدير، دليل مطابقة للمشتريات، وخطوات علاج تفصيلية للمطور — كله في ملف واحد.</p>
+                <h3>{t("تقرير ثلاثي الزوايا", "Three-perspective report")}</h3>
+                <p>{t("تقرير واحد يخدم 3 جهات: رؤية للمدير، دليل مطابقة للمشتريات، وخطوات علاج تفصيلية للمطور — كله في ملف واحد.", "One report serving 3 audiences: a view for the manager, a compliance checklist for procurement, and detailed remediation steps for the developer — all in a single file.")}</p>
               </div>
               <div className="step">
                 <span className="num">4</span>
-                <h3>تعيد التدقيق</h3>
-                <p>أعد تدقيق صفحة، مجموعة، أو الحملة كاملة. تاريخ كامل ومقارنة درجات حتى تصل لـ Advanced.</p>
+                <h3>{t("تعيد التدقيق", "Re-audit")}</h3>
+                <p>{t("أعد تدقيق صفحة، مجموعة، أو الحملة كاملة. تاريخ كامل ومقارنة درجات حتى تصل لـ Advanced.", "Re-audit a page, a group, or the entire campaign. Complete history and score comparisons until you reach Advanced.")}</p>
               </div>
             </div>
           </div>
@@ -698,13 +722,12 @@ export default async function HomePage({ params }: HomePageProps) {
           <div className="themes">
             <div>
               <div className="s-kicker" style={{ color: "var(--sa-300)" }}>DXMI 2026</div>
-              <h2>4 محاور · 20 ثيمة · +70 قاعدة آلية</h2>
+              <h2>{t("4 محاور · 20 ثيمة · +70 قاعدة آلية", "4 axes · 20 themes · +70 automated rules")}</h2>
               <p>
-                نقيس موقعك وفق البنية الرسمية لمؤشر نضج التجربة الرقمية: أربعة محاور تتفرّع إلى 20 ثيمة،
-                تغطّيها أكثر من 70 قاعدة آلية مرتبطة مباشرة بالدليل الرسمي.
+                {t("نقيس موقعك وفق البنية الرسمية لمؤشر نضج التجربة الرقمية: أربعة محاور تتفرّع إلى 20 ثيمة، تغطّيها أكثر من 70 قاعدة آلية مرتبطة مباشرة بالدليل الرسمي.", "We measure your site against the official structure of the Digital Experience Maturity Index: four axes branching into 20 themes, covered by more than 70 automated rules linked directly to the official guide.")}
               </p>
               <a className="btn btn-dark">
-                استكشف قواعد DXMI
+                {t("استكشف قواعد DXMI", "Explore DXMI rules")}
                 <ArrowLeft />
               </a>
             </div>
@@ -712,28 +735,28 @@ export default async function HomePage({ params }: HomePageProps) {
               <div className="t">
                 <span className="ic"><Award /></span>
                 <div>
-                  <b>نضج الخدمة</b>
+                  <b>{t("نضج الخدمة", "Service Maturity")}</b>
                   <span>Service Maturity</span>
                 </div>
               </div>
               <div className="t">
                 <span className="ic"><Smile /></span>
                 <div>
-                  <b>رضا المستخدم</b>
+                  <b>{t("رضا المستخدم", "User Satisfaction")}</b>
                   <span>User Satisfaction</span>
                 </div>
               </div>
               <div className="t">
                 <span className="ic"><MousePointer /></span>
                 <div>
-                  <b>سهولة الاستخدام</b>
+                  <b>{t("سهولة الاستخدام", "Usability")}</b>
                   <span>Usability</span>
                 </div>
               </div>
               <div className="t">
                 <span className="ic"><Network /></span>
                 <div>
-                  <b>التقنية وتكامل الخدمات</b>
+                  <b>{t("التقنية وتكامل الخدمات", "Technology & Service Integration")}</b>
                   <span>Technology &amp; Service Integration</span>
                 </div>
               </div>
@@ -746,11 +769,10 @@ export default async function HomePage({ params }: HomePageProps) {
       <section className="s">
         <div className="wrap">
           <div className="s-head" data-reveal>
-            <div className="s-kicker">003 · دورة الحياة الكاملة</div>
-            <h2 className="s-title">من <em>فيجما</em> إلى <em>الإنتاج</em>، بنفس المعيار</h2>
+            <div className="s-kicker">{t("003 · دورة الحياة الكاملة", "003 · The full lifecycle")}</div>
+            <h2 className="s-title">{t("من ", "From ")}<em>{t("فيجما", "Figma")}</em>{t(" إلى ", " to ")}<em>{t("الإنتاج", "production")}</em>{t("، بنفس المعيار", ", by the same standard")}</h2>
             <p className="s-lede">
-              المنتجان يتشاركان نفس قاعدة معايير هيئة الحكومة الرقمية — مما يضمن أن ما يُقاس في
-              التصميم هو ذاته ما يُقاس في الإنتاج.
+              {t("المنتجان يتشاركان نفس قاعدة معايير هيئة الحكومة الرقمية — مما يضمن أن ما يُقاس في التصميم هو ذاته ما يُقاس في الإنتاج.", "Both products share the same Digital Government Authority rule base — ensuring that what is measured in design is exactly what is measured in production.")}
             </p>
           </div>
           <div className="lifecycle" data-reveal-stagger>
@@ -762,11 +784,11 @@ export default async function HomePage({ params }: HomePageProps) {
                 </div>
                 <span className="lc-chip plugin">Plugin</span>
               </div>
-              <h3>التصميم</h3>
-              <p>المصمم يُجري تقييمًا مبكرًا داخل فيجما — ويُصلح المخالفات قبل التسليم.</p>
+              <h3>{t("التصميم", "Design")}</h3>
+              <p>{t("المصمم يُجري تقييمًا مبكرًا داخل فيجما — ويُصلح المخالفات قبل التسليم.", "The designer runs an early assessment inside Figma — and fixes violations before handoff.")}</p>
               <div className="lc-outcome">
                 <Check />
-                ينتقل إلى التطوير بأساس مُطابق
+                {t("ينتقل إلى التطوير بأساس مُطابق", "Moves to development on a compliant foundation")}
               </div>
             </div>
             <div className="lc plugin" data-reveal>
@@ -777,11 +799,11 @@ export default async function HomePage({ params }: HomePageProps) {
                 </div>
                 <span className="lc-chip plugin">Plugin</span>
               </div>
-              <h3>الموافقة</h3>
-              <p>نتيجة الالتزام تُرفَق مع ملف التصميم، فيدخل التطوير بأساس مُطابق.</p>
+              <h3>{t("الموافقة", "Approval")}</h3>
+              <p>{t("نتيجة الالتزام تُرفَق مع ملف التصميم، فيدخل التطوير بأساس مُطابق.", "The compliance result is attached to the design file, so development starts on a compliant foundation.")}</p>
               <div className="lc-outcome">
                 <Check />
-                إثبات التزام مرفق بالتصميم
+                {t("إثبات التزام مرفق بالتصميم", "Compliance proof attached to the design")}
               </div>
             </div>
             <div className="lc cloud" data-reveal>
@@ -792,11 +814,11 @@ export default async function HomePage({ params }: HomePageProps) {
                 </div>
                 <span className="lc-chip cloud">Cloud</span>
               </div>
-              <h3>الإطلاق</h3>
-              <p>بعد النشر، مُطابق كلاود يُجري تدقيقًا شاملًا للموقع كاملًا قبل التقييم الرسمي.</p>
+              <h3>{t("الإطلاق", "Launch")}</h3>
+              <p>{t("بعد النشر، مُطابق كلاود يُجري تدقيقًا شاملًا للموقع كاملًا قبل التقييم الرسمي.", "After publishing, Mutabiq Cloud runs a comprehensive audit of the full site before the official assessment.")}</p>
               <div className="lc-outcome">
                 <Check />
-                درجة DGA Advanced قبل التقييم
+                {t("درجة DGA Advanced قبل التقييم", "A DGA Advanced score before the assessment")}
               </div>
             </div>
             <div className="lc cloud" data-reveal>
@@ -807,11 +829,11 @@ export default async function HomePage({ params }: HomePageProps) {
                 </div>
                 <span className="lc-chip cloud">Cloud</span>
               </div>
-              <h3>المراقبة</h3>
-              <p>تدقيق دوري مستمر يحفظ مستوى الالتزام مع كل تحديث ويرصد أي تراجع فورًا.</p>
+              <h3>{t("المراقبة", "Monitoring")}</h3>
+              <p>{t("تدقيق دوري مستمر يحفظ مستوى الالتزام مع كل تحديث ويرصد أي تراجع فورًا.", "Continuous periodic auditing maintains the compliance level with every update and detects any regression instantly.")}</p>
               <div className="lc-outcome">
                 <Check />
-                إنذار فوري عند أي تراجع
+                {t("إنذار فوري عند أي تراجع", "Instant alert on any regression")}
               </div>
             </div>
           </div>
@@ -831,16 +853,15 @@ export default async function HomePage({ params }: HomePageProps) {
               </span>
               <span className="prod-status live">
                 <span className="dot" />
-                متاح الآن · v1.0
+                {t("متاح الآن · v1.0", "Available now · v1.0")}
               </span>
               <span className="prod-num">004 · Mutabiq for Figma</span>
             </div>
             <h2 className="s-title">
-              المصمم يُسلّم بـ <em>أساس مُطابق</em>
+              {t("المصمم يُسلّم بـ ", "Designers hand off with ")}<em>{t("أساس مُطابق", "a compliant foundation")}</em>
             </h2>
             <p className="s-lede">
-              أربع قدرات تشتغل داخل Figma — من الـ Lint إلى التقييم متعدد الأبعاد إلى الإصلاح الفوري،
-              بدون مغادرة بيئة التصميم.
+              {t("أربع قدرات تشتغل داخل Figma — من الـ Lint إلى التقييم متعدد الأبعاد إلى الإصلاح الفوري، بدون مغادرة بيئة التصميم.", "Four capabilities running inside Figma — from Lint to multi-dimensional assessment to instant fixes, without leaving the design environment.")}
             </p>
           </div>
           <div className="prod-feat prod-bento" data-reveal-stagger>
@@ -848,10 +869,10 @@ export default async function HomePage({ params }: HomePageProps) {
               <span className="pf-ic"><ListChecks /></span>
               <div className="pf-stat">
                 <span className="pf-num" data-counter="80">80</span>
-                <span className="pf-unit">قاعدة Lint عبر 17 prefix</span>
+                <span className="pf-unit">{t("قاعدة Lint عبر 17 prefix", "Lint rules across 17 prefixes")}</span>
               </div>
-              <h3>80 قاعدة Lint داخل Figma — مرتبطة بـ DGA</h3>
-              <p>تغطية شاملة: Tokens · Accessibility · RTL · Typography · Forms · Navigation · Layout · Buttons · Data Display · Feedback. كل قاعدة بوصف عربي/إنجليزي، severity واضح، وأمثلة كود قابلة للنسخ — صُمّمت خصيصًا لـ DGA Platforms Code.</p>
+              <h3>{t("80 قاعدة Lint داخل Figma — مرتبطة بـ DGA", "80 Lint rules inside Figma — linked to DGA")}</h3>
+              <p>{t("تغطية شاملة: Tokens · Accessibility · RTL · Typography · Forms · Navigation · Layout · Buttons · Data Display · Feedback. كل قاعدة بوصف عربي/إنجليزي، severity واضح، وأمثلة كود قابلة للنسخ — صُمّمت خصيصًا لـ DGA Platforms Code.", "Comprehensive coverage: Tokens · Accessibility · RTL · Typography · Forms · Navigation · Layout · Buttons · Data Display · Feedback. Each rule has an Arabic/English description, a clear severity, and copy-paste code samples — built specifically for the DGA Platforms Code.")}</p>
               <ul className="pf-hero-chips">
                 <li>Tokens</li>
                 <li>Accessibility</li>
@@ -865,10 +886,10 @@ export default async function HomePage({ params }: HomePageProps) {
               <span className="pf-ic"><Gauge /></span>
               <div className="pf-stat">
                 <span className="pf-num" data-counter="3">3</span>
-                <span className="pf-unit">درجات</span>
+                <span className="pf-unit">{t("درجات", "scores")}</span>
               </div>
-              <h3>تقييم متعدد الأبعاد</h3>
-              <p>DGA Compliance · Accessibility · UX — لكل Frame، بنظام Exponential Decay وتفصيل لكل قاعدة.</p>
+              <h3>{t("تقييم متعدد الأبعاد", "Multi-dimensional assessment")}</h3>
+              <p>{t("DGA Compliance · Accessibility · UX — لكل Frame، بنظام Exponential Decay وتفصيل لكل قاعدة.", "DGA Compliance · Accessibility · UX — for every Frame, with an Exponential Decay system and a breakdown per rule.")}</p>
               <span className="pf-tag">per frame</span>
             </div>
             <div className="pf-card" data-reveal>
@@ -877,18 +898,18 @@ export default async function HomePage({ params }: HomePageProps) {
                 <span className="pf-num pf-num-text">Auto-Fix</span>
                 <span className="pf-unit">+ Undo</span>
               </div>
-              <h3>إصلاح بنقرة</h3>
-              <p>الألوان والـ Fills تُصلَح آليًا لأقرب DGA Token، مع Undo حتى ٣ مستويات.</p>
+              <h3>{t("إصلاح بنقرة", "One-click fix")}</h3>
+              <p>{t("الألوان والـ Fills تُصلَح آليًا لأقرب DGA Token، مع Undo حتى ٣ مستويات.", "Colors and Fills are automatically corrected to the nearest DGA Token, with up to 3 levels of Undo.")}</p>
               <span className="pf-tag">3-level undo</span>
             </div>
             <div className="pf-card pf-card-wide" data-reveal>
               <span className="pf-ic"><Languages /></span>
               <div className="pf-stat">
                 <span className="pf-num pf-num-text">AR/EN</span>
-                <span className="pf-unit">عربي أصيل · RTL كامل · فصحى إدارية</span>
+                <span className="pf-unit">{t("عربي أصيل · RTL كامل · فصحى إدارية", "Native Arabic · full RTL · formal administrative register")}</span>
               </div>
-              <h3>أداة عربية أولًا — لا ترجمة آلية</h3>
-              <p>واجهة البلاجن والتقارير المُصدَّرة (PDF · Excel · Clipboard) كلها بالعربية الفصحى الإدارية، مع دعم RTL في كل عنصر، أرقام عربية-هندية، وbidi formatting سليم — لأن واجهات الجهات الحكومية لا تقبل أقل من ذلك.</p>
+              <h3>{t("أداة عربية أولًا — لا ترجمة آلية", "An Arabic-first tool — not a machine translation")}</h3>
+              <p>{t("واجهة البلاجن والتقارير المُصدَّرة (PDF · Excel · Clipboard) كلها بالعربية الفصحى الإدارية، مع دعم RTL في كل عنصر، أرقام عربية-هندية، وbidi formatting سليم — لأن واجهات الجهات الحكومية لا تقبل أقل من ذلك.", "The plugin interface and exported reports (PDF · Excel · Clipboard) are all in formal administrative Arabic, with RTL support on every element, Arabic-Indic numerals, and proper bidi formatting — because government entity interfaces accept nothing less.")}</p>
               <ul className="pf-hero-chips">
                 <li>PDF</li>
                 <li>Excel</li>
@@ -906,7 +927,7 @@ export default async function HomePage({ params }: HomePageProps) {
         <span className="bridge-line" aria-hidden />
         <span className="bridge-text">
           <span className="bridge-icon"><Pencil /></span>
-          حيث ينتهي البلاجن، يبدأ الكلاود
+          {t("حيث ينتهي البلاجن، يبدأ الكلاود", "Where the plugin ends, the Cloud begins")}
           <span className="bridge-icon"><Cloud /></span>
         </span>
         <span className="bridge-line" aria-hidden />
@@ -921,16 +942,15 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="prod-meta">
               <span className="prod-status soon">
                 <span className="dot" />
-                أساسيات شغّالة · إطلاق Q3 2026
+                {t("أساسيات شغّالة · إطلاق Q3 2026", "Core capabilities live · launching Q3 2026")}
               </span>
               <span className="prod-num">005 · Mutabiq Cloud</span>
             </div>
             <h2 className="s-title">
-              الإنتاج تحت <em>المراقبة الدائمة</em>
+              {t("الإنتاج تحت ", "Production under ")}<em>{t("المراقبة الدائمة", "continuous monitoring")}</em>
             </h2>
             <p className="s-lede">
-              ست قدرات تُحوّل التدقيق إلى عملية روتينية — من إدخال الموقع،
-              إلى محرّك DGA الرسمي، إلى تقارير ثلاثيّة الجمهور بالعربية الكاملة.
+              {t("ست قدرات تُحوّل التدقيق إلى عملية روتينية — من إدخال الموقع، إلى محرّك DGA الرسمي، إلى تقارير ثلاثيّة الجمهور بالعربية الكاملة.", "Six capabilities that turn auditing into a routine process — from site intake, to the official DGA engine, to three-audience reports in fully native Arabic.")}
             </p>
           </div>
           <div className="prod-feat prod-bento" data-reveal-stagger>
@@ -939,47 +959,47 @@ export default async function HomePage({ params }: HomePageProps) {
               <span className="pf-ic"><BadgeCheck /></span>
               <div className="pf-stat">
                 <span className="pf-num pf-num-text">+70</span>
-                <span className="pf-unit">قاعدة من DXMI 2026</span>
+                <span className="pf-unit">{t("قاعدة من DXMI 2026", "rules from DXMI 2026")}</span>
               </div>
-              <h3>محرّك DGA-DXMI 2026 الرسمي</h3>
-              <p>أكثر من 70 قاعدة مكتوبة من معيار DGA-DXMI 2026 الرسمي، موزَّعة على المحاور الأربعة: رضا المستفيد · تجربة المستخدم · القنوات · الثقة والشفافية. كل ملاحظة مرتبطة ببند محدَّد من المعيار، لا تنبيهات بدون مرجع.</p>
+              <h3>{t("محرّك DGA-DXMI 2026 الرسمي", "The official DGA-DXMI 2026 engine")}</h3>
+              <p>{t("أكثر من 70 قاعدة مكتوبة من معيار DGA-DXMI 2026 الرسمي، موزَّعة على المحاور الأربعة: رضا المستفيد · تجربة المستخدم · القنوات · الثقة والشفافية. كل ملاحظة مرتبطة ببند محدَّد من المعيار، لا تنبيهات بدون مرجع.", "More than 70 rules written from the official DGA-DXMI 2026 standard, distributed across the four axes: Beneficiary Satisfaction · User Experience · Channels · Trust and Transparency. Every finding is linked to a specific clause in the standard — no alerts without a reference.")}</p>
               <ul className="pf-hero-chips">
-                <li>BS · رضا المستفيد</li>
-                <li>UX · تجربة المستخدم</li>
-                <li>CH · القنوات</li>
-                <li>TT · الثقة والشفافية</li>
-                <li>+70 قاعدة</li>
-                <li>DGA رسمي</li>
+                <li>{t("BS · رضا المستفيد", "BS · Beneficiary Satisfaction")}</li>
+                <li>{t("UX · تجربة المستخدم", "UX · User Experience")}</li>
+                <li>{t("CH · القنوات", "CH · Channels")}</li>
+                <li>{t("TT · الثقة والشفافية", "TT · Trust & Transparency")}</li>
+                <li>{t("+70 قاعدة", "+70 rules")}</li>
+                <li>{t("DGA رسمي", "Official DGA")}</li>
               </ul>
             </div>
             {/* 2 — 3 input sources (replaces crawler) */}
             <div className="pf-card cloud" data-reveal>
               <span className="pf-ic"><Network /></span>
               <span className="pf-pill">URL · ZIP · GitHub</span>
-              <h3>تدقيق آلي · ٣ مصادر إدخال</h3>
-              <p>ابدأ بـ رابط الموقع (الزحف الذكي يكتشف الصفحات تلقائيًا حتى ١٠٠ صفحة لكل حملة)، أو ارفع ZIP لموقع جاهز، أو اربط GitHub repo مباشرة. نفس المحرّك ونفس القواعد لكل المصادر.</p>
-              <span className="pf-tag">حتى ١٠٠ صفحة · same-origin · robots.txt</span>
+              <h3>{t("تدقيق آلي · ٣ مصادر إدخال", "Automated audit · 3 input sources")}</h3>
+              <p>{t("ابدأ بـ رابط الموقع (الزحف الذكي يكتشف الصفحات تلقائيًا حتى ١٠٠ صفحة لكل حملة)، أو ارفع ZIP لموقع جاهز، أو اربط GitHub repo مباشرة. نفس المحرّك ونفس القواعد لكل المصادر.", "Start with a site URL (smart crawling discovers pages automatically — up to 100 pages per campaign), upload a ZIP of a finished site, or connect a GitHub repo directly. The same engine and the same rules for every source.")}</p>
+              <span className="pf-tag">{t("حتى ١٠٠ صفحة · same-origin · robots.txt", "Up to 100 pages · same-origin · robots.txt")}</span>
             </div>
             {/* 3 — Visual evidence (replaces viewports) */}
             <div className="pf-card cloud" data-reveal>
               <span className="pf-ic"><Camera /></span>
-              <span className="pf-pill">لقطة + تحديد العنصر</span>
-              <h3>شواهد بصرية لكل ملاحظة</h3>
-              <p>كل مخالفة موثَّقة بلقطة شاشة + تحديد دقيق للعنصر داخل الصفحة (CSS selector). المُراجِع يفتح التقرير ويرى مباشرة أين المشكلة، بدون الحاجة لفتح الموقع للتحقق.</p>
-              <span className="pf-tag">screenshots + selectors لكل تدقيق</span>
+              <span className="pf-pill">{t("لقطة + تحديد العنصر", "Screenshot + element selector")}</span>
+              <h3>{t("شواهد بصرية لكل ملاحظة", "Visual evidence for every finding")}</h3>
+              <p>{t("كل مخالفة موثَّقة بلقطة شاشة + تحديد دقيق للعنصر داخل الصفحة (CSS selector). المُراجِع يفتح التقرير ويرى مباشرة أين المشكلة، بدون الحاجة لفتح الموقع للتحقق.", "Every violation is documented with a screenshot plus a precise element pointer inside the page (CSS selector). The reviewer opens the report and sees exactly where the issue is, without needing to open the site to verify.")}</p>
+              <span className="pf-tag">{t("screenshots + selectors لكل تدقيق", "screenshots + selectors for every audit")}</span>
             </div>
             {/* 4 — Self-eval (hero) */}
             <div className="pf-card cloud pf-card-hero" data-reveal>
               <span className="pf-ic"><ClipboardList /></span>
               <div className="pf-stat">
                 <span className="pf-num" data-counter="32">32</span>
-                <span className="pf-unit">سؤال موزَّع على المحاور الأربعة</span>
+                <span className="pf-unit">{t("سؤال موزَّع على المحاور الأربعة", "questions across the four axes")}</span>
               </div>
-              <h3>تقييم ذاتي للثيمات التي لا يصلها الفحص الآلي</h3>
-              <p>استبيان منظَّم بـ 32 سؤال على 13 ثيمة موزَّعة على المحاور الأربعة — لرضا المستفيد وأجزاء من الثقة والشفافية التي لا تقدر الفحوصات الآلية على كشفها. الإجابات محفوظة لكل جهة كدليل، بالعربية والإنجليزية.</p>
+              <h3>{t("تقييم ذاتي للثيمات التي لا يصلها الفحص الآلي", "Self-assessment for the themes automated checks cannot reach")}</h3>
+              <p>{t("استبيان منظَّم بـ 32 سؤال على 13 ثيمة موزَّعة على المحاور الأربعة — لرضا المستفيد وأجزاء من الثقة والشفافية التي لا تقدر الفحوصات الآلية على كشفها. الإجابات محفوظة لكل جهة كدليل، بالعربية والإنجليزية.", "A structured survey of 32 questions across 13 themes distributed over the four axes — covering Beneficiary Satisfaction and parts of Trust & Transparency that automated checks cannot detect. Answers are stored per entity as evidence, in Arabic and English.")}</p>
               <ul className="pf-hero-chips">
-                <li>32 سؤال</li>
-                <li>13 ثيمة</li>
+                <li>{t("32 سؤال", "32 questions")}</li>
+                <li>{t("13 ثيمة", "13 themes")}</li>
                 <li>4 perspectives</li>
                 <li>per-org evidence</li>
                 <li>AR + EN</li>
@@ -990,25 +1010,25 @@ export default async function HomePage({ params }: HomePageProps) {
               <span className="pf-ic"><FileText /></span>
               <div className="pf-stat">
                 <span className="pf-num" data-counter="3">3</span>
-                <span className="pf-unit">تقارير من تشغيل واحد</span>
+                <span className="pf-unit">{t("تقارير من تشغيل واحد", "reports from a single run")}</span>
               </div>
-              <h3>تقرير واحد · ٣ زوايا للجمهور</h3>
-              <p>كل تدقيق يُنتج ثلاثة مخارج في وقت واحد: <b>لوحة درجات للمدير</b>، <b>قائمة مطابقة للمشتريات</b>، و<b>دليل إصلاح بالكود للمطوّر</b>. PDF تنفيذي + Excel سجل تفصيلي + واجهة تفاعلية. كلها بالعربية الفصحى الإدارية مع RTL سليم.</p>
+              <h3>{t("تقرير واحد · ٣ زوايا للجمهور", "One report · 3 audience perspectives")}</h3>
+              <p>{t("كل تدقيق يُنتج ثلاثة مخارج في وقت واحد: ", "Every audit produces three outputs at once: ")}<b>{t("لوحة درجات للمدير", "a scorecard for the manager")}</b>{t("، ", ", ")}<b>{t("قائمة مطابقة للمشتريات", "a compliance checklist for procurement")}</b>{t("، و", ", and ")}<b>{t("دليل إصلاح بالكود للمطوّر", "a code-level remediation guide for the developer")}</b>{t(". PDF تنفيذي + Excel سجل تفصيلي + واجهة تفاعلية. كلها بالعربية الفصحى الإدارية مع RTL سليم.", ". Executive PDF + detailed Excel log + interactive web view. All in formal administrative Arabic with proper RTL.")}</p>
               <ul className="pf-hero-chips">
-                <li>المدير · لوحة درجات</li>
-                <li>المشتريات · قائمة مطابقة</li>
-                <li>المطوّر · دليل إصلاح</li>
+                <li>{t("المدير · لوحة درجات", "Manager · Scorecard")}</li>
+                <li>{t("المشتريات · قائمة مطابقة", "Procurement · Compliance checklist")}</li>
+                <li>{t("المطوّر · دليل إصلاح", "Developer · Remediation guide")}</li>
                 <li>PDF + Excel + Web</li>
-                <li>عربية فصحى · RTL</li>
+                <li>{t("عربية فصحى · RTL", "Formal Arabic · RTL")}</li>
               </ul>
             </div>
             {/* 6 — Audit history + diff (revises versioned scoring) */}
             <div className="pf-card cloud" data-reveal>
               <span className="pf-ic"><Repeat /></span>
               <span className="pf-pill">fixed · stillPresent · added</span>
-              <h3>تاريخ تدقيقات قابل للمقارنة</h3>
-              <p>كل تدقيق محفوظ بدون انتهاء صلاحية. عند إعادة التدقيق، نقسم الملاحظات إلى ثلاث مجموعات على مستوى العنصر نفسه — يبان بالضبط ما اتصلح، وما لا يزال موجودًا، وما هو جديد. تتبّع رحلة الجهة من Below Basic إلى Advanced عبر الزمن.</p>
-              <span className="pf-tag">قبل / بعد لكل قاعدة وكل عنصر</span>
+              <h3>{t("تاريخ تدقيقات قابل للمقارنة", "A comparable audit history")}</h3>
+              <p>{t("كل تدقيق محفوظ بدون انتهاء صلاحية. عند إعادة التدقيق، نقسم الملاحظات إلى ثلاث مجموعات على مستوى العنصر نفسه — يبان بالضبط ما اتصلح، وما لا يزال موجودًا، وما هو جديد. تتبّع رحلة الجهة من Below Basic إلى Advanced عبر الزمن.", "Every audit is stored with no expiry. On re-audit, we split findings into three groups at the element level — showing exactly what was fixed, what is still present, and what is new. Track the entity's journey from Below Basic to Advanced over time.")}</p>
+              <span className="pf-tag">{t("قبل / بعد لكل قاعدة وكل عنصر", "Before / after for every rule and every element")}</span>
             </div>
           </div>
         </div>
@@ -1018,21 +1038,21 @@ export default async function HomePage({ params }: HomePageProps) {
       <section className="s gap-section" data-spotlight>
         <div className="wrap">
           <div className="s-head" data-reveal>
-            <div className="s-kicker">الفجوة في السوق</div>
+            <div className="s-kicker">{t("الفجوة في السوق", "The market gap")}</div>
             <h2 className="s-title">
-              ما لا تستطيع الأدوات الحالية فعله — <em>صُمّم مُطابق ليفعله</em>
+              {t("ما لا تستطيع الأدوات الحالية فعله — ", "What today's tools cannot do — ")}<em>{t("صُمّم مُطابق ليفعله", "Mutabiq was built to do")}</em>
             </h2>
             <p className="s-lede">
-              مقارنة صادقة: 7 قدرات تفصل بين أداة تدقيق عامة ومنصة حوكمة DXMI.
+              {t("مقارنة صادقة: 7 قدرات تفصل بين أداة تدقيق عامة ومنصة حوكمة DXMI.", "An honest comparison: 7 capabilities that separate a generic audit tool from a DXMI governance platform.")}
             </p>
           </div>
           <div className="gap-matrix" data-reveal>
             <div className="gap-head">
-              <div className="gap-h gap-h-cap">القدرة</div>
-              <div className="gap-h gap-h-mkt">الحلول الحالية</div>
+              <div className="gap-h gap-h-cap">{t("القدرة", "Capability")}</div>
+              <div className="gap-h gap-h-mkt">{t("الحلول الحالية", "Current solutions")}</div>
               <div className="gap-h gap-h-mtb">
                 <span className="gap-h-mark"><BrandMark className="lg gap-h-brand" /></span>
-                مُطابق
+                {t("مُطابق", "Mutabiq")}
               </div>
             </div>
             <ul className="gap-rows" data-reveal-stagger>
@@ -1040,48 +1060,48 @@ export default async function HomePage({ params }: HomePageProps) {
                 <div className="gap-cap">
                   <span className="gap-cap-ic"><ShieldCheck /></span>
                   <div className="gap-cap-text">
-                    <b>حوكمة مرتبطة بـ DXMI</b>
+                    <b>{t("حوكمة مرتبطة بـ DXMI", "DXMI-aware governance")}</b>
                     <span>DXMI-aware governance</span>
                   </div>
                 </div>
                 <div className="gap-mkt">
-                  <span className="gap-pill gap-pill-no" aria-label="غير متوفر">
+                  <span className="gap-pill gap-pill-no" aria-label={t("غير متوفر", "Not available")}>
                     <span aria-hidden>✗</span>
                   </span>
                 </div>
                 <div className="gap-mtb">
                   <span className="gap-check"><Check /></span>
-                  <span className="gap-proof">+70 قاعدة ↔ 4 محاور</span>
+                  <span className="gap-proof">{t("+70 قاعدة ↔ 4 محاور", "+70 rules ↔ 4 axes")}</span>
                 </div>
               </li>
               <li className="gap-row" data-reveal>
                 <div className="gap-cap">
                   <span className="gap-cap-ic"><Activity /></span>
                   <div className="gap-cap-text">
-                    <b>فرض الامتثال فوريًا</b>
+                    <b>{t("فرض الامتثال فوريًا", "Real-time compliance enforcement")}</b>
                     <span>Real-time compliance enforcement</span>
                   </div>
                 </div>
                 <div className="gap-mkt">
-                  <span className="gap-pill gap-pill-no" aria-label="غير متوفر">
+                  <span className="gap-pill gap-pill-no" aria-label={t("غير متوفر", "Not available")}>
                     <span aria-hidden>✗</span>
                   </span>
                 </div>
                 <div className="gap-mtb">
                   <span className="gap-check"><Check /></span>
-                  <span className="gap-proof">داخل Figma + الإنتاج</span>
+                  <span className="gap-proof">{t("داخل Figma + الإنتاج", "Inside Figma + production")}</span>
                 </div>
               </li>
               <li className="gap-row" data-reveal>
                 <div className="gap-cap">
                   <span className="gap-cap-ic"><Layers /></span>
                   <div className="gap-cap-text">
-                    <b>تكامل مع التصميم والتطوير</b>
+                    <b>{t("تكامل مع التصميم والتطوير", "Integration with design & dev workflows")}</b>
                     <span>Integration with design &amp; dev workflows</span>
                   </div>
                 </div>
                 <div className="gap-mkt">
-                  <span className="gap-pill gap-pill-partial">جزئي</span>
+                  <span className="gap-pill gap-pill-partial">{t("جزئي", "Partial")}</span>
                 </div>
                 <div className="gap-mtb">
                   <span className="gap-check"><Check /></span>
@@ -1092,73 +1112,73 @@ export default async function HomePage({ params }: HomePageProps) {
                 <div className="gap-cap">
                   <span className="gap-cap-ic"><Repeat /></span>
                   <div className="gap-cap-text">
-                    <b>مراقبة مستمرة عبر دورة الحياة</b>
+                    <b>{t("مراقبة مستمرة عبر دورة الحياة", "Continuous lifecycle monitoring")}</b>
                     <span>Continuous lifecycle monitoring</span>
                   </div>
                 </div>
                 <div className="gap-mkt">
-                  <span className="gap-pill gap-pill-partial">جزئي</span>
+                  <span className="gap-pill gap-pill-partial">{t("جزئي", "Partial")}</span>
                 </div>
                 <div className="gap-mtb">
                   <span className="gap-check"><Check /></span>
-                  <span className="gap-proof">تدقيق دوري + إنذار التراجع</span>
+                  <span className="gap-proof">{t("تدقيق دوري + إنذار التراجع", "Periodic audits + regression alerts")}</span>
                 </div>
               </li>
               <li className="gap-row" data-reveal>
                 <div className="gap-cap">
                   <span className="gap-cap-ic"><FileText /></span>
                   <div className="gap-cap-text">
-                    <b>محرك قواعد من المعايير الحكومية</b>
+                    <b>{t("محرك قواعد من المعايير الحكومية", "Government standards-to-rules engine")}</b>
                     <span>Government standards-to-rules engine</span>
                   </div>
                 </div>
                 <div className="gap-mkt">
-                  <span className="gap-pill gap-pill-no" aria-label="غير متوفر">
+                  <span className="gap-pill gap-pill-no" aria-label={t("غير متوفر", "Not available")}>
                     <span aria-hidden>✗</span>
                   </span>
                 </div>
                 <div className="gap-mtb">
                   <span className="gap-check"><Check /></span>
-                  <span className="gap-proof">DXMI 2026 رسمي</span>
+                  <span className="gap-proof">{t("DXMI 2026 رسمي", "Official DXMI 2026")}</span>
                 </div>
               </li>
               <li className="gap-row" data-reveal>
                 <div className="gap-cap">
                   <span className="gap-cap-ic"><BarChart3 /></span>
                   <div className="gap-cap-text">
-                    <b>رؤية حوكمة مركزية</b>
+                    <b>{t("رؤية حوكمة مركزية", "Centralized governance visibility")}</b>
                     <span>Centralized governance visibility</span>
                   </div>
                 </div>
                 <div className="gap-mkt">
-                  <span className="gap-pill gap-pill-limited">محدود</span>
+                  <span className="gap-pill gap-pill-limited">{t("محدود", "Limited")}</span>
                 </div>
                 <div className="gap-mtb">
                   <span className="gap-check"><Check /></span>
-                  <span className="gap-proof">3 أدوار · تقرير واحد</span>
+                  <span className="gap-proof">{t("3 أدوار · تقرير واحد", "3 roles · one report")}</span>
                 </div>
               </li>
               <li className="gap-row" data-reveal>
                 <div className="gap-cap">
                   <span className="gap-cap-ic"><Network /></span>
                   <div className="gap-cap-text">
-                    <b>تنسيق حوكمة على مستوى وطني</b>
+                    <b>{t("تنسيق حوكمة على مستوى وطني", "National-scale governance orchestration")}</b>
                     <span>National-scale governance orchestration</span>
                   </div>
                 </div>
                 <div className="gap-mkt">
-                  <span className="gap-pill gap-pill-no" aria-label="غير متوفر">
+                  <span className="gap-pill gap-pill-no" aria-label={t("غير متوفر", "Not available")}>
                     <span aria-hidden>✗</span>
                   </span>
                 </div>
                 <div className="gap-mtb">
                   <span className="gap-check"><Check /></span>
-                  <span className="gap-proof">جاهز للجهات السيادية</span>
+                  <span className="gap-proof">{t("جاهز للجهات السيادية", "Ready for sovereign entities")}</span>
                 </div>
               </li>
             </ul>
             <p className="gap-strap">
-              هذه ليست ميزات — هذه <em>فجوة سوق</em> صُمّم منتجنا لسدّها.
+              {t("هذه ليست ميزات — هذه ", "These are not features — this is a ")}<em>{t("فجوة سوق", "market gap")}</em>{t(" صُمّم منتجنا لسدّها.", " our product was built to close.")}
             </p>
           </div>
         </div>
@@ -1168,10 +1188,10 @@ export default async function HomePage({ params }: HomePageProps) {
       <section className="s">
         <div className="wrap">
           <div className="s-head" data-reveal>
-            <div className="s-kicker">لماذا مُطابق</div>
-            <h2 className="s-title">منصة امتثال — لا مجرد أداة تدقيق</h2>
+            <div className="s-kicker">{t("لماذا مُطابق", "Why Mutabiq")}</div>
+            <h2 className="s-title">{t("منصة امتثال — لا مجرد أداة تدقيق", "A compliance platform — not just an audit tool")}</h2>
             <p className="s-lede">
-              رؤية للمديرين، دليل للمشتريات، علاج للمطورين. كل ذلك من تقرير واحد، بالعربية أولًا.
+              {t("رؤية للمديرين، دليل للمشتريات، علاج للمطورين. كل ذلك من تقرير واحد، بالعربية أولًا.", "Visibility for managers, a checklist for procurement, remediation for developers. All from a single report — Arabic first.")}
             </p>
           </div>
           <div className="why-bento" data-reveal-stagger>
@@ -1194,13 +1214,13 @@ export default async function HomePage({ params }: HomePageProps) {
                   <span className="rmock-check"><Check /></span>
                 </div>
                 <div className="rmock-more">
-                  <span>+62 قاعدة</span>
+                  <span>{t("+62 قاعدة", "+62 rules")}</span>
                   <span className="rmock-more-tag">DXMI 2026 V5.0</span>
                 </div>
               </div>
               <div className="why-text">
-                <h3>تغطية رسمية لـ DXMI 2026</h3>
-                <p>أكثر من 70 قاعدة عبر المحاور الأربعة، كل قاعدة مرجعها بند رسمي من الدليل V5.0 — ليست قواعد عامة معاد تسميتها.</p>
+                <h3>{t("تغطية رسمية لـ DXMI 2026", "Official DXMI 2026 coverage")}</h3>
+                <p>{t("أكثر من 70 قاعدة عبر المحاور الأربعة، كل قاعدة مرجعها بند رسمي من الدليل V5.0 — ليست قواعد عامة معاد تسميتها.", "More than 70 rules across the four axes, each one referencing an official clause from the V5.0 guide — not generic rules with new names.")}</p>
               </div>
             </article>
 
@@ -1212,18 +1232,18 @@ export default async function HomePage({ params }: HomePageProps) {
                   <span>EN</span>
                 </div>
                 <div className="armock-rule">
-                  <b>حوكمة مرتبطة بـ DXMI</b>
+                  <b>{t("حوكمة مرتبطة بـ DXMI", "DXMI-aware governance")}</b>
                   <span className="armock-en">DXMI-aware governance</span>
                 </div>
                 <div className="armock-meta">
-                  <span className="armock-stat"><span className="armock-num">٦٥</span> قاعدة</span>
+                  <span className="armock-stat"><span className="armock-num">{t("٦٥", "65")}</span> {t("قاعدة", "rules")}</span>
                   <span className="armock-dot">·</span>
-                  <span className="armock-stat"><span className="armock-num">+٢٥٠</span> نص علاج</span>
+                  <span className="armock-stat"><span className="armock-num">{t("+٢٥٠", "+250")}</span> {t("نص علاج", "remediation texts")}</span>
                 </div>
               </div>
               <div className="why-text">
-                <h3>عربي أصيل — لا ترجمة آلية</h3>
-                <p>كل قاعدة وكل علاج بالفصحى الإدارية — RTL كامل، أرقام عربية-هندية، bidi formatting سليم.</p>
+                <h3>{t("عربي أصيل — لا ترجمة آلية", "Native Arabic — not a machine translation")}</h3>
+                <p>{t("كل قاعدة وكل علاج بالفصحى الإدارية — RTL كامل، أرقام عربية-هندية، bidi formatting سليم.", "Every rule and every remediation in formal administrative Arabic — full RTL, Arabic-Indic numerals, proper bidi formatting.")}</p>
               </div>
             </article>
 
@@ -1232,13 +1252,13 @@ export default async function HomePage({ params }: HomePageProps) {
               <div className="why-mockup">
                 <div className="rpmock-layer rpmock-admin">
                   <div className="rpmock-head">
-                    <span className="rpmock-role">المدير</span>
+                    <span className="rpmock-role">{t("المدير", "Manager")}</span>
                     <span className="rpmock-score">85</span>
                   </div>
                   <div className="rpmock-bar"><span style={{width: "85%"}} /></div>
                 </div>
                 <div className="rpmock-layer rpmock-procure">
-                  <span className="rpmock-role">المشتريات</span>
+                  <span className="rpmock-role">{t("المشتريات", "Procurement")}</span>
                   <ul className="rpmock-checks">
                     <li><Check /> A11y</li>
                     <li><Check /> UX</li>
@@ -1246,13 +1266,13 @@ export default async function HomePage({ params }: HomePageProps) {
                   </ul>
                 </div>
                 <div className="rpmock-layer rpmock-dev">
-                  <span className="rpmock-role">المطور</span>
+                  <span className="rpmock-role">{t("المطور", "Developer")}</span>
                   <code className="rpmock-code">.btn {`{`} color: #006C35 {`}`}</code>
                 </div>
               </div>
               <div className="why-text">
-                <h3>تقرير واحد · 3 زوايا</h3>
-                <p>المدير يجد لوحة الدرجات. المشتريات يجد دليل المطابقة. المطور يجد خطوات العلاج بالكود — في ملف PDF واحد.</p>
+                <h3>{t("تقرير واحد · 3 زوايا", "One report · 3 perspectives")}</h3>
+                <p>{t("المدير يجد لوحة الدرجات. المشتريات يجد دليل المطابقة. المطور يجد خطوات العلاج بالكود — في ملف PDF واحد.", "The manager finds the scorecard. Procurement finds the compliance checklist. The developer finds the code-level remediation steps — all in a single PDF.")}</p>
               </div>
             </article>
 
@@ -1279,15 +1299,15 @@ export default async function HomePage({ params }: HomePageProps) {
                   <circle cx="190" cy="10" r="4" className="hmock-dot hmock-dot-final" />
                 </svg>
                 <div className="hmock-x-labels">
-                  <span>تشغيل ١</span>
-                  <span>٢</span>
-                  <span>٣</span>
-                  <span>٤</span>
+                  <span>{t("تشغيل ١", "Run 1")}</span>
+                  <span>{t("٢", "2")}</span>
+                  <span>{t("٣", "3")}</span>
+                  <span>{t("٤", "4")}</span>
                 </div>
               </div>
               <div className="why-text">
-                <h3>تاريخ كامل · بدون حد</h3>
-                <p>كل تدقيق محفوظ بكامل تفاصيله. تتبّع التحسّن من Below Basic حتى Advanced — تشغيلات غير محدودة.</p>
+                <h3>{t("تاريخ كامل · بدون حد", "Complete history · no limit")}</h3>
+                <p>{t("كل تدقيق محفوظ بكامل تفاصيله. تتبّع التحسّن من Below Basic حتى Advanced — تشغيلات غير محدودة.", "Every audit is stored in full detail. Track progress from Below Basic up to Advanced — unlimited runs.")}</p>
               </div>
             </article>
 
@@ -1300,15 +1320,15 @@ export default async function HomePage({ params }: HomePageProps) {
                     <b>PDPL</b>
                     <span className="cmock-pillar-status">aligned</span>
                   </div>
-                  <p className="cmock-pillar-desc">متوافق مع نظام حماية البيانات الشخصية السعودي.</p>
+                  <p className="cmock-pillar-desc">{t("متوافق مع نظام حماية البيانات الشخصية السعودي.", "Aligned with the Saudi Personal Data Protection Law.")}</p>
                 </div>
                 <div className="cmock-pillar cmock-pillar-featured">
                   <span className="cmock-pillar-ic"><Lock /></span>
                   <div className="cmock-pillar-head">
                     <b>On-Prem</b>
-                    <span className="cmock-pillar-status cmock-pillar-status-featured">للسيادي</span>
+                    <span className="cmock-pillar-status cmock-pillar-status-featured">{t("للسيادي", "Sovereign")}</span>
                   </div>
-                  <p className="cmock-pillar-desc">البيانات الخام تبقى داخل شبكتك — Findings فقط هي اللي تخرج.</p>
+                  <p className="cmock-pillar-desc">{t("البيانات الخام تبقى داخل شبكتك — Findings فقط هي اللي تخرج.", "Raw data stays inside your network — only Findings leave it.")}</p>
                 </div>
                 <div className="cmock-pillar">
                   <span className="cmock-pillar-ic"><FileText /></span>
@@ -1316,12 +1336,12 @@ export default async function HomePage({ params }: HomePageProps) {
                     <b>SOC 2</b>
                     <span className="cmock-pillar-status">evidence</span>
                   </div>
-                  <p className="cmock-pillar-desc">حزمة وثائق الضوابط الأمنية متاحة للمراجعة.</p>
+                  <p className="cmock-pillar-desc">{t("حزمة وثائق الضوابط الأمنية متاحة للمراجعة.", "A security controls documentation pack is available for review.")}</p>
                 </div>
               </div>
               <div className="why-text">
-                <h3>أمن وامتثال للجهات الحكومية</h3>
-                <p>متوافق مع نظام حماية البيانات الشخصية (PDPL). خيار on-prem للجهات السيادية — البيانات الخام لا تخرج من شبكتك. SOC 2 evidence pack متاح.</p>
+                <h3>{t("أمن وامتثال للجهات الحكومية", "Security and compliance for government entities")}</h3>
+                <p>{t("متوافق مع نظام حماية البيانات الشخصية (PDPL). خيار on-prem للجهات السيادية — البيانات الخام لا تخرج من شبكتك. SOC 2 evidence pack متاح.", "Aligned with the Personal Data Protection Law (PDPL). On-prem option for sovereign entities — raw data does not leave your network. SOC 2 evidence pack available.")}</p>
               </div>
             </article>
           </div>
@@ -1339,44 +1359,43 @@ export default async function HomePage({ params }: HomePageProps) {
       <section className="s shift">
         <div className="wrap">
           <div className="s-head" data-reveal>
-            <div className="s-kicker">نقلة النموذج</div>
+            <div className="s-kicker">{t("نقلة النموذج", "Paradigm shift")}</div>
             <h2 className="s-title">
-              من امتثال موسمي… إلى <em>منظومة مستمرة</em>
+              {t("من امتثال موسمي… إلى ", "From seasonal compliance… to a ")}<em>{t("منظومة مستمرة", "continuous system")}</em>
             </h2>
             <p className="s-lede">
-              مُطابق ليس أداةً بديلة في نفس المسار القديم — هو تحوّل في
-              منظومة الامتثال نفسها. ست نقلات جوهرية تظهر في كل دورة عمل.
+              {t("مُطابق ليس أداةً بديلة في نفس المسار القديم — هو تحوّل في منظومة الامتثال نفسها. ست نقلات جوهرية تظهر في كل دورة عمل.", "Mutabiq is not a replacement tool inside the same old workflow — it is a shift in the compliance system itself. Six fundamental shifts that appear in every cycle of work.")}
             </p>
           </div>
 
           <div className="shift-board">
             {/* Column headers */}
             <div className="shift-col-head shift-old-head" data-reveal>
-              <span className="shift-tag">قبل</span>
-              <h3>الطريقة القديمة</h3>
+              <span className="shift-tag">{t("قبل", "Before")}</span>
+              <h3>{t("الطريقة القديمة", "The old way")}</h3>
             </div>
             <div className="shift-axis-head" aria-hidden>
               <ArrowLeft className="shift-arrow" />
             </div>
             <div className="shift-col-head shift-new-head" data-reveal>
-              <span className="shift-tag">مع مُطابق</span>
-              <h3>منظومة الامتثال المستمر</h3>
+              <span className="shift-tag">{t("مع مُطابق", "With Mutabiq")}</span>
+              <h3>{t("منظومة الامتثال المستمر", "Continuous compliance system")}</h3>
             </div>
 
             {/* Row 1 — Cadence: seasonal → continuous */}
             <div className="shift-cell shift-old" data-reveal>
               <span className="shift-ic"><Clock /></span>
               <div className="shift-body">
-                <b>تقييم موسمي مرّة في السنة</b>
-                <p>سباق متأخر مع موعد زيارة الهيئة، وقرارات إصلاح تحت ضغط الوقت.</p>
+                <b>{t("تقييم موسمي مرّة في السنة", "A seasonal assessment once a year")}</b>
+                <p>{t("سباق متأخر مع موعد زيارة الهيئة، وقرارات إصلاح تحت ضغط الوقت.", "A late race against the Authority's visit date, with remediation decisions made under time pressure.")}</p>
               </div>
             </div>
             <div className="shift-line" aria-hidden></div>
             <div className="shift-cell shift-new" data-reveal>
               <span className="shift-ic"><Repeat /></span>
               <div className="shift-body">
-                <b>امتثال مستمر داخل كل دورة عمل</b>
-                <p>كل تغيير في الموقع يُفحَص فور حدوثه — قبل أن يتحوّل إلى مخالفة مؤجَّلة.</p>
+                <b>{t("امتثال مستمر داخل كل دورة عمل", "Continuous compliance inside every work cycle")}</b>
+                <p>{t("كل تغيير في الموقع يُفحَص فور حدوثه — قبل أن يتحوّل إلى مخالفة مؤجَّلة.", "Every change to the site is checked as it happens — before it turns into a deferred violation.")}</p>
               </div>
             </div>
 
@@ -1384,16 +1403,16 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="shift-cell shift-old" data-reveal>
               <span className="shift-ic"><Unlink /></span>
               <div className="shift-body">
-                <b>تقييم ذاتي يتعارض مع تقييم الهيئة</b>
-                <p>الجهة تقيس بطريقة، والمقيِّم بأخرى — والنتيجتان لا تتطابقان.</p>
+                <b>{t("تقييم ذاتي يتعارض مع تقييم الهيئة", "Self-assessment that conflicts with the Authority's assessment")}</b>
+                <p>{t("الجهة تقيس بطريقة، والمقيِّم بأخرى — والنتيجتان لا تتطابقان.", "The entity measures one way and the assessor measures another — and the two results don't match.")}</p>
               </div>
             </div>
             <div className="shift-line" aria-hidden></div>
             <div className="shift-cell shift-new" data-reveal>
               <span className="shift-ic"><Network /></span>
               <div className="shift-body">
-                <b>مساران بنفس المعيار · نتيجة قابلة للمقارنة</b>
-                <p>التقييم الذاتي وتقييم الهيئة من نفس محرّك DXMI 2026 — صفر فجوة قياس.</p>
+                <b>{t("مساران بنفس المعيار · نتيجة قابلة للمقارنة", "Two tracks on the same standard · a comparable result")}</b>
+                <p>{t("التقييم الذاتي وتقييم الهيئة من نفس محرّك DXMI 2026 — صفر فجوة قياس.", "Self-assessment and the Authority's assessment from the same DXMI 2026 engine — zero measurement gap.")}</p>
               </div>
             </div>
 
@@ -1401,16 +1420,16 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="shift-cell shift-old" data-reveal>
               <span className="shift-ic"><AlertTriangle /></span>
               <div className="shift-body">
-                <b>تحديثات المعيار تأتي كمفاجأة</b>
-                <p>بنود جديدة تظهر في التقييم بلا مهلة استعداد — فتتحوّل إلى مخالفات فورية.</p>
+                <b>{t("تحديثات المعيار تأتي كمفاجأة", "Standard updates arrive as a surprise")}</b>
+                <p>{t("بنود جديدة تظهر في التقييم بلا مهلة استعداد — فتتحوّل إلى مخالفات فورية.", "New clauses appear in the assessment with no preparation window — turning into immediate violations.")}</p>
               </div>
             </div>
             <div className="shift-line" aria-hidden></div>
             <div className="shift-cell shift-new" data-reveal>
               <span className="shift-ic"><BadgeCheck /></span>
               <div className="shift-body">
-                <b>إصدارات مرقَّمة مع مهلة سماح</b>
-                <p>كل تحديث في DXMI يصل بإصداره ومدّة التطبيق — جدول واضح يُتيح التحضير المسبق.</p>
+                <b>{t("إصدارات مرقَّمة مع مهلة سماح", "Versioned releases with a grace period")}</b>
+                <p>{t("كل تحديث في DXMI يصل بإصداره ومدّة التطبيق — جدول واضح يُتيح التحضير المسبق.", "Every DXMI update arrives with its version number and effective date — a clear schedule that enables advance preparation.")}</p>
               </div>
             </div>
 
@@ -1418,16 +1437,16 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="shift-cell shift-old" data-reveal>
               <span className="shift-ic"><FileText /></span>
               <div className="shift-body">
-                <b>تتبّع في Excel وإيميلات منثورة</b>
-                <p>كل جهة تبني ملفّاتها بطريقتها، والملاحظات تضيع بين الإصدارات والمراسلات.</p>
+                <b>{t("تتبّع في Excel وإيميلات منثورة", "Tracking in Excel and scattered emails")}</b>
+                <p>{t("كل جهة تبني ملفّاتها بطريقتها، والملاحظات تضيع بين الإصدارات والمراسلات.", "Every entity builds its own files its own way, and findings get lost between versions and email threads.")}</p>
               </div>
             </div>
             <div className="shift-line" aria-hidden></div>
             <div className="shift-cell shift-new" data-reveal>
               <span className="shift-ic"><Layers /></span>
               <div className="shift-body">
-                <b>مصدر واحد للحقيقة · تاريخ بدون حد</b>
-                <p>كل تشغيل، كل ملاحظة، كل إصلاح — في خيط واحد متّصل قابل للمقارنة عبر السنوات.</p>
+                <b>{t("مصدر واحد للحقيقة · تاريخ بدون حد", "A single source of truth · history with no limit")}</b>
+                <p>{t("كل تشغيل، كل ملاحظة، كل إصلاح — في خيط واحد متّصل قابل للمقارنة عبر السنوات.", "Every run, every finding, every fix — in one connected thread, comparable across years.")}</p>
               </div>
             </div>
 
@@ -1435,16 +1454,16 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="shift-cell shift-old" data-reveal>
               <span className="shift-ic"><Scale /></span>
               <div className="shift-body">
-                <b>اعتراضات تطول لأشهر بلا قالب</b>
-                <p>الردود تنتقل بين الإيميل والاجتماعات — بلا تسلسل موثَّق ولا مدّة محسومة.</p>
+                <b>{t("اعتراضات تطول لأشهر بلا قالب", "Disputes that drag on for months without a template")}</b>
+                <p>{t("الردود تنتقل بين الإيميل والاجتماعات — بلا تسلسل موثَّق ولا مدّة محسومة.", "Responses bounce between email and meetings — with no documented sequence and no defined timeline.")}</p>
               </div>
             </div>
             <div className="shift-line" aria-hidden></div>
             <div className="shift-cell shift-new" data-reveal>
               <span className="shift-ic"><ClipboardList /></span>
               <div className="shift-body">
-                <b>مسار اعتراض هيكلي بشواهد ومُدَد</b>
-                <p>كل اعتراض له شاهد بصري، ومرجع بنديّ، ومسار حسم محدّد الزمن.</p>
+                <b>{t("مسار اعتراض هيكلي بشواهد ومُدَد", "A structured dispute path with evidence and timelines")}</b>
+                <p>{t("كل اعتراض له شاهد بصري، ومرجع بنديّ، ومسار حسم محدّد الزمن.", "Every dispute has visual evidence, a clause reference, and a time-bound resolution path.")}</p>
               </div>
             </div>
 
@@ -1452,16 +1471,16 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="shift-cell shift-old" data-reveal>
               <span className="shift-ic"><AlertOctagon /></span>
               <div className="shift-body">
-                <b>الامتثال = عقوبة بعد الحدث</b>
-                <p>الموارد تُصرف على إصلاح المخالفات الظاهرة، لا على رفع نضج المنصّة فعلًا.</p>
+                <b>{t("الامتثال = عقوبة بعد الحدث", "Compliance = punishment after the fact")}</b>
+                <p>{t("الموارد تُصرف على إصلاح المخالفات الظاهرة، لا على رفع نضج المنصّة فعلًا.", "Resources are spent fixing surface-level violations, not actually raising the platform's maturity.")}</p>
               </div>
             </div>
             <div className="shift-line" aria-hidden></div>
             <div className="shift-cell shift-new" data-reveal>
               <span className="shift-ic"><Rocket /></span>
               <div className="shift-body">
-                <b>الامتثال = تمكين قبل الحدث</b>
-                <p>الفريق يرى الفجوة وهي صغيرة، فيُصلحها كجزء من العمل اليومي — لا كأزمة.</p>
+                <b>{t("الامتثال = تمكين قبل الحدث", "Compliance = enablement before the fact")}</b>
+                <p>{t("الفريق يرى الفجوة وهي صغيرة، فيُصلحها كجزء من العمل اليومي — لا كأزمة.", "The team sees the gap while it's small and fixes it as part of daily work — not as a crisis.")}</p>
               </div>
             </div>
           </div>
@@ -1471,9 +1490,8 @@ export default async function HomePage({ params }: HomePageProps) {
               redesign the system itself. */}
           <div className="shift-strap" data-reveal>
             <p>
-              ست نقلات · في طريقة عمل واحدة.
-              لا نضيف <em>أداةً جديدة</em> فوق الفوضى — نُعيد تصميم
-              <em> المنظومة </em>نفسها.
+              {t("ست نقلات · في طريقة عمل واحدة. لا نضيف ", "Six shifts · in a single way of working. We don't add ")}<em>{t("أداةً جديدة", "another tool")}</em>{t(" فوق الفوضى — نُعيد تصميم", " on top of the chaos — we redesign")}
+              <em>{t(" المنظومة ", " the system ")}</em>{t("نفسها.", "itself.")}
             </p>
           </div>
         </div>
@@ -1487,14 +1505,12 @@ export default async function HomePage({ params }: HomePageProps) {
       <section className="s authority">
         <div className="wrap">
           <div className="s-head" data-reveal>
-            <div className="s-kicker">الفرق الجوهري</div>
+            <div className="s-kicker">{t("الفرق الجوهري", "The essential difference")}</div>
             <h2 className="s-title">
-              كيف تستخدم <em>هيئة الحكومة الرقمية</em> مُطابق
+              {t("كيف تستخدم ", "How the ")}<em>{t("هيئة الحكومة الرقمية", "Digital Government Authority")}</em>{t(" مُطابق", " uses Mutabiq")}
             </h2>
             <p className="s-lede">
-              تحدّثنا حتى الآن عن كيف يخدم مُطابق الجهات. هنا نقلب العدسة:
-              مُطابق ليس أداةً للجهات وحدها — بل بنية تحتية تُمكِّن الهيئة
-              نفسها من ممارسة دورَيها التنظيمي والمعرفي بكفاءة أعلى.
+              {t("تحدّثنا حتى الآن عن كيف يخدم مُطابق الجهات. هنا نقلب العدسة: مُطابق ليس أداةً للجهات وحدها — بل بنية تحتية تُمكِّن الهيئة نفسها من ممارسة دورَيها التنظيمي والمعرفي بكفاءة أعلى.", "Up to here we've talked about how Mutabiq serves the entities. Now we flip the lens: Mutabiq is not a tool for entities alone — it is infrastructure that empowers the Authority itself to perform both its regulatory and knowledge roles more effectively.")}
             </p>
           </div>
 
@@ -1502,36 +1518,36 @@ export default async function HomePage({ params }: HomePageProps) {
             {/* Role 1 — Regulator (DGA green) */}
             <article className="authority-role authority-role-regulator" data-reveal>
               <header className="authority-role-head">
-                <span className="authority-role-badge">الدور الأول</span>
-                <h3>كهيئة منظِّمة ومراقِبة</h3>
+                <span className="authority-role-badge">{t("الدور الأول", "Role one")}</span>
+                <h3>{t("كهيئة منظِّمة ومراقِبة", "As a regulatory and supervisory authority")}</h3>
               </header>
               <ul className="authority-cap-list">
                 <li className="authority-cap">
                   <span className="authority-cap-ic"><Gauge /></span>
                   <div>
-                    <b>لوحة قيادة موحَّدة</b>
-                    <p>نظرة فورية لحالة كل المنصات الـ ٦١ في شاشة واحدة.</p>
+                    <b>{t("لوحة قيادة موحَّدة", "A unified dashboard")}</b>
+                    <p>{t("نظرة فورية لحالة كل المنصات الـ ٦١ في شاشة واحدة.", "An instant view of all 61 platforms' status on a single screen.")}</p>
                   </div>
                 </li>
                 <li className="authority-cap">
                   <span className="authority-cap-ic"><Repeat /></span>
                   <div>
-                    <b>تقييم مستمرّ بدل سنوي</b>
-                    <p>فحص آلي أسبوعي يكشف الانحراف فور حدوثه.</p>
+                    <b>{t("تقييم مستمرّ بدل سنوي", "Continuous assessment instead of annual")}</b>
+                    <p>{t("فحص آلي أسبوعي يكشف الانحراف فور حدوثه.", "A weekly automated check that detects drift the moment it happens.")}</p>
                   </div>
                 </li>
                 <li className="authority-cap">
                   <span className="authority-cap-ic"><Scale /></span>
                   <div>
-                    <b>منهجية موحَّدة قابلة للمقارنة</b>
-                    <p>كل تقرير يستخدم نفس المرجعيّة — فروق صادقة بين الجهات.</p>
+                    <b>{t("منهجية موحَّدة قابلة للمقارنة", "A unified, comparable methodology")}</b>
+                    <p>{t("كل تقرير يستخدم نفس المرجعيّة — فروق صادقة بين الجهات.", "Every report uses the same reference — honest differences between entities.")}</p>
                   </div>
                 </li>
                 <li className="authority-cap">
                   <span className="authority-cap-ic"><ClipboardList /></span>
                   <div>
-                    <b>سجلّ تدقيق كامل</b>
-                    <p>كل اكتشاف، كل إصلاح، كل تحديث موثَّق ومتتبَّع زمنيًا.</p>
+                    <b>{t("سجلّ تدقيق كامل", "A complete audit log")}</b>
+                    <p>{t("كل اكتشاف، كل إصلاح، كل تحديث موثَّق ومتتبَّع زمنيًا.", "Every finding, every fix, every update is documented and tracked over time.")}</p>
                   </div>
                 </li>
               </ul>
@@ -1549,36 +1565,36 @@ export default async function HomePage({ params }: HomePageProps) {
             {/* Role 2 — Publisher (warm amber) */}
             <article className="authority-role authority-role-publisher" data-reveal>
               <header className="authority-role-head">
-                <span className="authority-role-badge">الدور الثاني</span>
-                <h3>كناشِرة للمعايير</h3>
+                <span className="authority-role-badge">{t("الدور الثاني", "Role two")}</span>
+                <h3>{t("كناشِرة للمعايير", "As a publisher of standards")}</h3>
               </header>
               <ul className="authority-cap-list">
                 <li className="authority-cap">
                   <span className="authority-cap-ic"><Activity /></span>
                   <div>
-                    <b>نشر فوري لأي تحديث</b>
-                    <p>تُحدِّثون قاعدة، يصل التنبيه لكل المصمّمين والمطوّرين خلال أسبوع.</p>
+                    <b>{t("نشر فوري لأي تحديث", "Instant publication of any update")}</b>
+                    <p>{t("تُحدِّثون قاعدة، يصل التنبيه لكل المصمّمين والمطوّرين خلال أسبوع.", "You update a rule, the alert reaches every designer and developer within a week.")}</p>
                   </div>
                 </li>
                 <li className="authority-cap">
                   <span className="authority-cap-ic"><AlertCircle /></span>
                   <div>
-                    <b>ترجمة المعيار إلى تنبيه</b>
-                    <p>بدل وثيقة ٩٠ صفحة، يصل المعيار كرسالة محدّدة وقت العمل.</p>
+                    <b>{t("ترجمة المعيار إلى تنبيه", "Translating the standard into an alert")}</b>
+                    <p>{t("بدل وثيقة ٩٠ صفحة، يصل المعيار كرسالة محدّدة وقت العمل.", "Instead of a 90-page document, the standard arrives as a precise message at the moment of work.")}</p>
                   </div>
                 </li>
                 <li className="authority-cap">
                   <span className="authority-cap-ic"><Smile /></span>
                   <div>
-                    <b>قناة وصول بدون تدريب</b>
-                    <p>لا حاجة لبرامج توعية ضخمة — الأداة هي الوسيط التعليمي.</p>
+                    <b>{t("قناة وصول بدون تدريب", "A reach channel without training")}</b>
+                    <p>{t("لا حاجة لبرامج توعية ضخمة — الأداة هي الوسيط التعليمي.", "No need for large awareness programs — the tool itself is the educational medium.")}</p>
                   </div>
                 </li>
                 <li className="authority-cap">
                   <span className="authority-cap-ic"><BarChart3 /></span>
                   <div>
-                    <b>بيانات تغذية راجعة</b>
-                    <p>أيّ معيار غير قابل للتطبيق يظهر في إحصاءاتنا — تَعرفونه فور وقوعه.</p>
+                    <b>{t("بيانات تغذية راجعة", "Feedback data")}</b>
+                    <p>{t("أيّ معيار غير قابل للتطبيق يظهر في إحصاءاتنا — تَعرفونه فور وقوعه.", "Any standard that isn't practically applicable shows up in our statistics — you know about it the moment it happens.")}</p>
                   </div>
                 </li>
               </ul>
@@ -1590,9 +1606,9 @@ export default async function HomePage({ params }: HomePageProps) {
           <div className="authority-strap" data-reveal>
             <span className="authority-strap-mark" aria-hidden>“</span>
             <p>
-              <b>الخلاصة:</b>
-              مُطابق ليس عميلًا للهيئة — بل
-              <em> امتدادٌ تشغيليّ لذراعها التنظيميّ والمعرفيّ.</em>
+              <b>{t("الخلاصة:", "The bottom line:")}</b>
+              {t(" مُطابق ليس عميلًا للهيئة — بل", " Mutabiq is not a vendor to the Authority — it is")}
+              <em>{t(" امتدادٌ تشغيليّ لذراعها التنظيميّ والمعرفيّ.", " an operational extension of its regulatory and knowledge arm.")}</em>
             </p>
           </div>
         </div>
@@ -1604,11 +1620,10 @@ export default async function HomePage({ params }: HomePageProps) {
       <section className="s benefits">
         <div className="wrap">
           <div className="s-head" data-reveal>
-            <div className="s-kicker">القيمة لكم</div>
-            <h2 className="s-title">أربع منافع مباشرة</h2>
+            <div className="s-kicker">{t("القيمة لكم", "The value for you")}</div>
+            <h2 className="s-title">{t("أربع منافع مباشرة", "Four direct benefits")}</h2>
             <p className="s-lede">
-              ما الذي تكسبه الهيئة من شراكة معنا — أربع منافع تشغيلية
-              مرتبطة مباشرة بدور الهيئة التنظيمي والمعرفي.
+              {t("ما الذي تكسبه الهيئة من شراكة معنا — أربع منافع تشغيلية مرتبطة مباشرة بدور الهيئة التنظيمي والمعرفي.", "What the Authority gains from a partnership with us — four operational benefits tied directly to the Authority's regulatory and knowledge role.")}
             </p>
           </div>
 
@@ -1616,29 +1631,29 @@ export default async function HomePage({ params }: HomePageProps) {
             <article className="benefit-card" data-reveal>
               <div className="benefit-num">01</div>
               <div className="benefit-card-body">
-                <h3>ارتفاع نضج المنصات</h3>
-                <p>كل جهة تستخدم مُطابق تصل للتقييم وهي جاهزة — أعلى متوسط، أسرع تقدّم سنوي.</p>
+                <h3>{t("ارتفاع نضج المنصات", "Higher platform maturity")}</h3>
+                <p>{t("كل جهة تستخدم مُطابق تصل للتقييم وهي جاهزة — أعلى متوسط، أسرع تقدّم سنوي.", "Every entity using Mutabiq arrives at the assessment ready — a higher average and faster year-over-year progress.")}</p>
               </div>
             </article>
             <article className="benefit-card" data-reveal>
               <div className="benefit-num">02</div>
               <div className="benefit-card-body">
-                <h3>تقصير دورة التقييم</h3>
-                <p>الملاحظات تُكتشف قبل الزيارة — يقلّ عدد التذاكر المتأخّرة وزمن المراجعة.</p>
+                <h3>{t("تقصير دورة التقييم", "A shorter assessment cycle")}</h3>
+                <p>{t("الملاحظات تُكتشف قبل الزيارة — يقلّ عدد التذاكر المتأخّرة وزمن المراجعة.", "Findings are detected before the visit — fewer late tickets and shorter review time.")}</p>
               </div>
             </article>
             <article className="benefit-card" data-reveal>
               <div className="benefit-num">03</div>
               <div className="benefit-card-body">
-                <h3>امتداد ذراع التوعية</h3>
-                <p>تنشرون المعيار، وننقله إلى المصمّم والمطوّر يوميًا — قناة وصول بدون ميزانية تدريب.</p>
+                <h3>{t("امتداد ذراع التوعية", "An extension of the awareness arm")}</h3>
+                <p>{t("تنشرون المعيار، وننقله إلى المصمّم والمطوّر يوميًا — قناة وصول بدون ميزانية تدريب.", "You publish the standard, we deliver it to the designer and developer every day — a reach channel without a training budget.")}</p>
               </div>
             </article>
             <article className="benefit-card" data-reveal>
               <div className="benefit-num">04</div>
               <div className="benefit-card-body">
-                <h3>بيانات قابلة للمقارنة</h3>
-                <p>تقارير امتثال موحَّدة الشكل عبر الجهات — مع الحفاظ على عزل بياناتي صارم.</p>
+                <h3>{t("بيانات قابلة للمقارنة", "Comparable data")}</h3>
+                <p>{t("تقارير امتثال موحَّدة الشكل عبر الجهات — مع الحفاظ على عزل بياناتي صارم.", "Compliance reports with a unified format across entities — while maintaining strict data isolation.")}</p>
               </div>
             </article>
           </div>
@@ -1650,27 +1665,27 @@ export default async function HomePage({ params }: HomePageProps) {
         <section className="s" style={{ paddingTop: 0 }}>
           <div className="wrap">
             <div className="s-head" data-reveal>
-              <div className="s-kicker">الأثر</div>
-              <h2 className="s-title">أرقام تترجم القيمة</h2>
-              <p className="s-lede">ليست شعارات تسويقية — هذه هي حدود ما يقدّمه مُطابق اليوم، بالأرقام.</p>
+              <div className="s-kicker">{t("الأثر", "Impact")}</div>
+              <h2 className="s-title">{t("أرقام تترجم القيمة", "Numbers that translate value")}</h2>
+              <p className="s-lede">{t("ليست شعارات تسويقية — هذه هي حدود ما يقدّمه مُطابق اليوم، بالأرقام.", "Not marketing slogans — these are the limits of what Mutabiq delivers today, in numbers.")}</p>
             </div>
             <div className="impact">
               <div className="impact-grid">
                 <div className="impact-cell">
                   <b>+70</b>
-                  <span>قاعدة آلية بالعربية — مرتبطة ببنود DXMI 2026 الرسمية</span>
+                  <span>{t("قاعدة آلية بالعربية — مرتبطة ببنود DXMI 2026 الرسمية", "Automated rules in Arabic — linked to the official DXMI 2026 clauses")}</span>
                 </div>
                 <div className="impact-cell">
                   <b>100%</b>
-                  <span>عربي أصيل — لا ترجمة آلية، فصحى إدارية</span>
+                  <span>{t("عربي أصيل — لا ترجمة آلية، فصحى إدارية", "Native Arabic — no machine translation, formal administrative register")}</span>
                 </div>
                 <div className="impact-cell">
                   <b>100</b>
-                  <span>صفحة لكل حملة — موقعك كاملًا، لا عيّنات</span>
+                  <span>{t("صفحة لكل حملة — موقعك كاملًا، لا عيّنات", "Pages per campaign — your entire site, not samples")}</span>
                 </div>
                 <div className="impact-cell">
                   <b>3</b>
-                  <span>تقارير من تشغيل واحد — مدير، مشتريات، مطور</span>
+                  <span>{t("تقارير من تشغيل واحد — مدير، مشتريات، مطور", "Reports from a single run — manager, procurement, developer")}</span>
                 </div>
               </div>
             </div>
@@ -1687,11 +1702,10 @@ export default async function HomePage({ params }: HomePageProps) {
             </span>
             <div>
               <blockquote>
-                التقييم السنوي للهيئة لا يعطي فرصة ثانية.
+                {t("التقييم السنوي للهيئة لا يعطي فرصة ثانية.", "The Authority's annual assessment doesn't give a second chance.")}
               </blockquote>
               <p>
-                في كل دورة تقييم، جهات كثيرة تخسر مستواها بدون إنذار مبكر — والعودة تتطلب سنة كاملة من العمل.
-                مُطابق يكشف الفجوات الآن، حين تستطيع إصلاحها قبل أن يراها المقيّم.
+                {t("في كل دورة تقييم، جهات كثيرة تخسر مستواها بدون إنذار مبكر — والعودة تتطلب سنة كاملة من العمل. مُطابق يكشف الفجوات الآن، حين تستطيع إصلاحها قبل أن يراها المقيّم.", "In every assessment cycle, many entities lose their tier without any early warning — and recovery takes a full year of work. Mutabiq surfaces the gaps now, while you can still fix them before the assessor sees them.")}
               </p>
             </div>
           </div>
@@ -1708,15 +1722,14 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="faq-intro" data-reveal>
               <div className="faq-kicker">
                 <span className="faq-kicker-ic" aria-hidden>+</span>
-                <span>أسئلة شائعة</span>
+                <span>{t("أسئلة شائعة", "Frequently asked questions")}</span>
               </div>
               <h2 className="faq-title">
-                ستة أسئلة
-                <em>نسمعها كثيرًا</em>
+                {t("ستة أسئلة", "Six questions")}
+                <em>{t("نسمعها كثيرًا", "we hear often")}</em>
               </h2>
               <p className="faq-desc">
-                إجابات مفصَّلة على أبرز ما يَشغل فرق الجهات الحكومية قبل البدء.
-                أجوبتنا واضحة ومتاحة للنقاش معكم في أيّ جلسة.
+                {t("إجابات مفصَّلة على أبرز ما يَشغل فرق الجهات الحكومية قبل البدء. أجوبتنا واضحة ومتاحة للنقاش معكم في أيّ جلسة.", "Detailed answers to the main concerns of government entity teams before they begin. Our answers are clear and open for discussion with you in any session.")}
               </p>
             </div>
 
@@ -1724,104 +1737,84 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="faq-list" data-reveal>
               <details className="faq-card" name="faq" open>
                 <summary className="faq-summary">
-                  <span className="faq-q-text">كيف نضمن أنّ مُطابق يعكس آخر تحديث في معاييركم؟</span>
+                  <span className="faq-q-text">{t("كيف نضمن أنّ مُطابق يعكس آخر تحديث في معاييركم؟", "How do we ensure Mutabiq reflects the latest update to your standards?")}</span>
                   <span className="faq-toggle" aria-hidden>
                     <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 4.5l3 3 3-3" /></svg>
                   </span>
                 </summary>
                 <div className="faq-answer">
                   <p>
-                    قاعدة DGA-DXMI 2026 موثَّقة في كودنا — كل قاعدة مرجعها بند
-                    رسمي محدَّد (مثلاً V5.0 من DGA-1-2-1-229). أيّ تحديث تُصدِره
-                    الهيئة نلتزم بدمجه خلال أسبوعين، مع سجلّ تغييرات قابل
-                    للمراجعة لكل قاعدة.
+                    {t("قاعدة DGA-DXMI 2026 موثَّقة في كودنا — كل قاعدة مرجعها بند رسمي محدَّد (مثلاً V5.0 من DGA-1-2-1-229). أيّ تحديث تُصدِره الهيئة نلتزم بدمجه خلال أسبوعين، مع سجلّ تغييرات قابل للمراجعة لكل قاعدة.", "The DGA-DXMI 2026 rule base is documented in our code — each rule cites a specific official clause (for example V5.0 of DGA-1-2-1-229). Any update the Authority issues, we commit to integrate within two weeks, with a reviewable changelog for every rule.")}
                   </p>
                 </div>
               </details>
 
               <details className="faq-card" name="faq">
                 <summary className="faq-summary">
-                  <span className="faq-q-text">ما الذي يميّزكم عن أدوات الفحص العالمية (axe، Lighthouse)؟</span>
+                  <span className="faq-q-text">{t("ما الذي يميّزكم عن أدوات الفحص العالمية (axe، Lighthouse)؟", "What sets you apart from global auditing tools (axe, Lighthouse)?")}</span>
                   <span className="faq-toggle" aria-hidden>
                     <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 4.5l3 3 3-3" /></svg>
                   </span>
                 </summary>
                 <div className="faq-answer">
                   <p>
-                    الأدوات العالمية تقيس WCAG العام و Core Web Vitals — لا
-                    تعرف بنود DXMI 2026، ولا تدعم العربية الفصحى الإدارية،
-                    ولا تفهم RTL بشكل أصيل. مُطابق وُلِد محليًّا، صُمّم خصيصًا
-                    لمعايير DGA، ومتاح للاستضافة داخل المملكة عند الحاجة.
+                    {t("الأدوات العالمية تقيس WCAG العام و Core Web Vitals — لا تعرف بنود DXMI 2026، ولا تدعم العربية الفصحى الإدارية، ولا تفهم RTL بشكل أصيل. مُطابق وُلِد محليًّا، صُمّم خصيصًا لمعايير DGA، ومتاح للاستضافة داخل المملكة عند الحاجة.", "Global tools measure generic WCAG and Core Web Vitals — they don't know the DXMI 2026 clauses, don't support formal administrative Arabic, and don't natively understand RTL. Mutabiq was built locally, designed specifically for DGA standards, and available for hosting inside the Kingdom on request.")}
                   </p>
                 </div>
               </details>
 
               <details className="faq-card" name="faq">
                 <summary className="faq-summary">
-                  <span className="faq-q-text">هل يحلّ مُطابق محلّ التقييم البشري؟</span>
+                  <span className="faq-q-text">{t("هل يحلّ مُطابق محلّ التقييم البشري؟", "Does Mutabiq replace human assessment?")}</span>
                   <span className="faq-toggle" aria-hidden>
                     <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 4.5l3 3 3-3" /></svg>
                   </span>
                 </summary>
                 <div className="faq-answer">
                   <p>
-                    لا. نُغطّي ما يمكن أتمتته بدقّة — التقنية، الإتاحة، الأداء،
-                    الاتساق — ونُوفّر للمُقيِّم البشري أدلّة جاهزة وشواهد مرئية.
-                    المُراجِع البشريّ يُركّز على ما يحتاج إنسانًا: السياق،
-                    الجودة الإبداعية، وتجربة المستفيد الفعلية.
+                    {t("لا. نُغطّي ما يمكن أتمتته بدقّة — التقنية، الإتاحة، الأداء، الاتساق — ونُوفّر للمُقيِّم البشري أدلّة جاهزة وشواهد مرئية. المُراجِع البشريّ يُركّز على ما يحتاج إنسانًا: السياق، الجودة الإبداعية، وتجربة المستفيد الفعلية.", "No. We cover what can be reliably automated — technology, accessibility, performance, consistency — and we provide the human assessor with ready evidence and visual proof. The human reviewer focuses on what requires a human: context, creative quality, and actual beneficiary experience.")}
                   </p>
                 </div>
               </details>
 
               <details className="faq-card" name="faq">
                 <summary className="faq-summary">
-                  <span className="faq-q-text">أين تُخزَّن بياناتنا، وكيف تُحمى من حيث الخصوصية؟</span>
+                  <span className="faq-q-text">{t("أين تُخزَّن بياناتنا، وكيف تُحمى من حيث الخصوصية؟", "Where is our data stored, and how is its privacy protected?")}</span>
                   <span className="faq-toggle" aria-hidden>
                     <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 4.5l3 3 3-3" /></svg>
                   </span>
                 </summary>
                 <div className="faq-answer">
                   <p>
-                    مُطابق متوافق مع نظام حماية البيانات الشخصية السعودي (PDPL).
-                    البيانات التشغيلية تُخزَّن في Frankfurt حاليًّا، مع خطة
-                    انتقال إلى منطقة Riyadh عند توفّرها. كل عميل معزول عبر
-                    Row-Level Security على مستوى قاعدة البيانات. للجهات السيادية:
-                    خيار النشر On-Prem متاح — البيانات الخام لا تخرج من شبكتكم،
-                    فقط نتائج الفحص.
+                    {t("مُطابق متوافق مع نظام حماية البيانات الشخصية السعودي (PDPL). البيانات التشغيلية تُخزَّن في Frankfurt حاليًّا، مع خطة انتقال إلى منطقة Riyadh عند توفّرها. كل عميل معزول عبر Row-Level Security على مستوى قاعدة البيانات. للجهات السيادية: خيار النشر On-Prem متاح — البيانات الخام لا تخرج من شبكتكم، فقط نتائج الفحص.", "Mutabiq is aligned with the Saudi Personal Data Protection Law (PDPL). Operational data is currently stored in Frankfurt, with a planned move to the Riyadh region when it becomes available. Each customer is isolated via Row-Level Security at the database layer. For sovereign entities: an On-Prem deployment option is available — raw data does not leave your network, only the audit results do.")}
                   </p>
                 </div>
               </details>
 
               <details className="faq-card" name="faq">
                 <summary className="faq-summary">
-                  <span className="faq-q-text">ماذا لو احتجنا تخصيصًا — قواعد إضافية، تكامل خاص، تقارير على هويّتنا؟</span>
+                  <span className="faq-q-text">{t("ماذا لو احتجنا تخصيصًا — قواعد إضافية، تكامل خاص، تقارير على هويّتنا؟", "What if we need customization — additional rules, custom integrations, branded reports?")}</span>
                   <span className="faq-toggle" aria-hidden>
                     <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 4.5l3 3 3-3" /></svg>
                   </span>
                 </summary>
                 <div className="faq-answer">
                   <p>
-                    نعم. قواعد مخصّصة (خاصة بسياقكم القطاعي) تُكتب في ٧-١٤ يوم.
-                    تكامل CI/CD، Nafath/SSO، وWebhooks متاحة من المرحلة
-                    الثانية. التقارير بهويّة الجهة (شعار، ألوان، نطاق) جزء
-                    من باقة Enterprise، ومتاحة من V2.
+                    {t("نعم. قواعد مخصّصة (خاصة بسياقكم القطاعي) تُكتب في ٧-١٤ يوم. تكامل CI/CD، Nafath/SSO، وWebhooks متاحة من المرحلة الثانية. التقارير بهويّة الجهة (شعار، ألوان، نطاق) جزء من باقة Enterprise، ومتاحة من V2.", "Yes. Custom rules (specific to your sector context) are written in 7-14 days. CI/CD integration, Nafath/SSO, and Webhooks are available from phase two. Entity-branded reports (logo, colors, domain) are part of the Enterprise tier and available from V2.")}
                   </p>
                 </div>
               </details>
 
               <details className="faq-card" name="faq">
                 <summary className="faq-summary">
-                  <span className="faq-q-text">متى يكون مُطابق كلاود جاهزًا للاستخدام معكم؟</span>
+                  <span className="faq-q-text">{t("متى يكون مُطابق كلاود جاهزًا للاستخدام معكم؟", "When will Mutabiq Cloud be ready for us to use?")}</span>
                   <span className="faq-toggle" aria-hidden>
                     <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 4.5l3 3 3-3" /></svg>
                   </span>
                 </summary>
                 <div className="faq-answer">
                   <p>
-                    إصدار V1 يُطلَق في شهر ٨ من ٢٠٢٦. للجهات الشريكة في
-                    المرحلة التجريبية، نُجهّز إصدارًا خاصًا خلال ٨ أسابيع من
-                    اعتماد التجربة، مع تحديثات أسبوعية وجلسات مراجعة منتظمة
-                    مع فريقكم الفنّي.
+                    {t("إصدار V1 يُطلَق في شهر ٨ من ٢٠٢٦. للجهات الشريكة في المرحلة التجريبية، نُجهّز إصدارًا خاصًا خلال ٨ أسابيع من اعتماد التجربة، مع تحديثات أسبوعية وجلسات مراجعة منتظمة مع فريقكم الفنّي.", "V1 launches in month 8 of 2026. For pilot-stage partner entities, we prepare a dedicated build within 8 weeks of pilot approval, with weekly updates and regular review sessions with your technical team.")}
                   </p>
                 </div>
               </details>
@@ -1837,11 +1830,10 @@ export default async function HomePage({ params }: HomePageProps) {
       <section className="s roadmap">
         <div className="wrap">
           <div className="s-head" data-reveal>
-            <div className="s-kicker">خارطة الطريق · ١٢ شهرًا</div>
-            <h2 className="s-title">ثلاث مراحل · تسليم واضح في كل مرحلة</h2>
+            <div className="s-kicker">{t("خارطة الطريق · ١٢ شهرًا", "Roadmap · 12 months")}</div>
+            <h2 className="s-title">{t("ثلاث مراحل · تسليم واضح في كل مرحلة", "Three phases · clear deliverables at every step")}</h2>
             <p className="s-lede">
-              كل مرحلة تنتهي بتسليم محدَّد وقيمة قابلة للقياس عند جهتكم —
-              خطّة عمل واضحة من اليوم وحتى ٢٠٢٧.
+              {t("كل مرحلة تنتهي بتسليم محدَّد وقيمة قابلة للقياس عند جهتكم — خطّة عمل واضحة من اليوم وحتى ٢٠٢٧.", "Each phase ends with a specific deliverable and measurable value at your entity — a clear plan of work from today through 2027.")}
             </p>
           </div>
 
@@ -1850,34 +1842,34 @@ export default async function HomePage({ params }: HomePageProps) {
                 "current/upcoming" milestone gets pricing-card-style
                 emphasis since this is what readers can act on today. */}
             <article className="roadmap-card roadmap-card-featured" data-reveal>
-              <span className="roadmap-card-badge">المرحلة الحالية</span>
+              <span className="roadmap-card-badge">{t("المرحلة الحالية", "Current phase")}</span>
               <span className="roadmap-card-icon"><Rocket /></span>
               <div className="roadmap-card-meta">
-                <span className="roadmap-card-num">٠١</span>
-                <span className="roadmap-card-when">شهر ٨ · ٢٠٢٦</span>
+                <span className="roadmap-card-num">{t("٠١", "01")}</span>
+                <span className="roadmap-card-when">{t("شهر ٨ · ٢٠٢٦", "Month 8 · 2026")}</span>
               </div>
-              <h3 className="roadmap-card-title">التجهيز والإطلاق الأول</h3>
-              <p className="roadmap-card-tagline">إطلاق Mutabiq Cloud V1 + ربطه مع إضافة Figma المتاحة بالفعل.</p>
+              <h3 className="roadmap-card-title">{t("التجهيز والإطلاق الأول", "Preparation and first launch")}</h3>
+              <p className="roadmap-card-tagline">{t("إطلاق Mutabiq Cloud V1 + ربطه مع إضافة Figma المتاحة بالفعل.", "Launching Mutabiq Cloud V1 + connecting it with the Figma plugin that is already available.")}</p>
               <ul className="roadmap-card-features">
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span><b>Mutabiq for Figma</b> — متاحة الآن (٨٠ قاعدة Lint)</span>
+                  <span><b>Mutabiq for Figma</b> {t("— متاحة الآن (٨٠ قاعدة Lint)", "— available now (80 Lint rules)")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span><b>Mutabiq Cloud V1</b> — تدقيق URL، ZIP، GitHub</span>
+                  <span><b>Mutabiq Cloud V1</b> {t("— تدقيق URL، ZIP، GitHub", "— URL, ZIP, GitHub auditing")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>محرّك DXMI 2026 (+70 قاعدة آلية)</span>
+                  <span>{t("محرّك DXMI 2026 (+70 قاعدة آلية)", "DXMI 2026 engine (+70 automated rules)")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>تقارير PDF و Excel بالعربية الفصحى</span>
+                  <span>{t("تقارير PDF و Excel بالعربية الفصحى", "PDF and Excel reports in formal Arabic")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>حماية بيانات PDPL · عَزل تام بين الجهات</span>
+                  <span>{t("حماية بيانات PDPL · عَزل تام بين الجهات", "PDPL data protection · full isolation between entities")}</span>
                 </li>
               </ul>
             </article>
@@ -1886,31 +1878,31 @@ export default async function HomePage({ params }: HomePageProps) {
             <article className="roadmap-card" data-reveal>
               <span className="roadmap-card-icon"><Activity /></span>
               <div className="roadmap-card-meta">
-                <span className="roadmap-card-num">٠٢</span>
-                <span className="roadmap-card-when">Q4 ٢٠٢٦ · Q1 ٢٠٢٧</span>
+                <span className="roadmap-card-num">{t("٠٢", "02")}</span>
+                <span className="roadmap-card-when">{t("Q4 ٢٠٢٦ · Q1 ٢٠٢٧", "Q4 2026 · Q1 2027")}</span>
               </div>
-              <h3 className="roadmap-card-title">التشغيل المستمر والمراقبة</h3>
-              <p className="roadmap-card-tagline">تحويل التدقيق من حدث لمرّة واحدة إلى مراقبة دائمة.</p>
+              <h3 className="roadmap-card-title">{t("التشغيل المستمر والمراقبة", "Continuous operation and monitoring")}</h3>
+              <p className="roadmap-card-tagline">{t("تحويل التدقيق من حدث لمرّة واحدة إلى مراقبة دائمة.", "Turning auditing from a one-time event into continuous monitoring.")}</p>
               <ul className="roadmap-card-features">
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>جدولة تدقيقات دورية (أسبوعية/شهرية)</span>
+                  <span>{t("جدولة تدقيقات دورية (أسبوعية/شهرية)", "Scheduling periodic audits (weekly/monthly)")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>مقارنة تاريخية بين التدقيقات</span>
+                  <span>{t("مقارنة تاريخية بين التدقيقات", "Historical comparison between audits")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>روابط تقارير قابلة للمشاركة</span>
+                  <span>{t("روابط تقارير قابلة للمشاركة", "Shareable report links")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>تسليم النتائج بالبريد الإلكتروني</span>
+                  <span>{t("تسليم النتائج بالبريد الإلكتروني", "Delivering results by email")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>تدقيق الصفحات المحمية بكلمة مرور</span>
+                  <span>{t("تدقيق الصفحات المحمية بكلمة مرور", "Auditing password-protected pages")}</span>
                 </li>
               </ul>
             </article>
@@ -1919,31 +1911,31 @@ export default async function HomePage({ params }: HomePageProps) {
             <article className="roadmap-card" data-reveal>
               <span className="roadmap-card-icon"><Network /></span>
               <div className="roadmap-card-meta">
-                <span className="roadmap-card-num">٠٣</span>
-                <span className="roadmap-card-when">Q2 · Q3 ٢٠٢٧</span>
+                <span className="roadmap-card-num">{t("٠٣", "03")}</span>
+                <span className="roadmap-card-when">{t("Q2 · Q3 ٢٠٢٧", "Q2 · Q3 2027")}</span>
               </div>
-              <h3 className="roadmap-card-title">التكامل والتوسعة</h3>
-              <p className="roadmap-card-tagline">توسيع مُطابق ليناسب بنية الجهة الكاملة ومتطلباتها السيادية.</p>
+              <h3 className="roadmap-card-title">{t("التكامل والتوسعة", "Integration and expansion")}</h3>
+              <p className="roadmap-card-tagline">{t("توسيع مُطابق ليناسب بنية الجهة الكاملة ومتطلباتها السيادية.", "Extending Mutabiq to fit the entity's full stack and sovereign requirements.")}</p>
               <ul className="roadmap-card-features">
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>تسجيل دخول موحَّد عبر النفاذ الوطني للجهات الحكومية</span>
+                  <span>{t("تسجيل دخول موحَّد عبر النفاذ الوطني للجهات الحكومية", "Unified sign-in via Nafath for government entities")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>تقارير بهويّة جهتكم — شعار وألوان واسم نطاق على كل ملف</span>
+                  <span>{t("تقارير بهويّة جهتكم — شعار وألوان واسم نطاق على كل ملف", "Reports in your entity's identity — logo, colors, and domain on every file")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>لوحة قيادة موحَّدة لجميع منصات الجهة</span>
+                  <span>{t("لوحة قيادة موحَّدة لجميع منصات الجهة", "A unified dashboard for all the entity's platforms")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>قواعد فحص قطاعية مخصَّصة (تعليم، صحة، نقل...)</span>
+                  <span>{t("قواعد فحص قطاعية مخصَّصة (تعليم، صحة، نقل...)", "Sector-specific custom audit rules (education, health, transport...)")}</span>
                 </li>
                 <li>
                   <span className="roadmap-card-check"><Check /></span>
-                  <span>خيار النشر داخل شبكتكم للجهات السيادية</span>
+                  <span>{t("خيار النشر داخل شبكتكم للجهات السيادية", "On-prem deployment option inside your network for sovereign entities")}</span>
                 </li>
               </ul>
             </article>
@@ -1953,14 +1945,14 @@ export default async function HomePage({ params }: HomePageProps) {
           <div className="roadmap-freebies" data-reveal>
             <div className="roadmap-freebies-label">
               <span className="roadmap-freebies-dot" aria-hidden />
-              ما نُقدّمه للجهات الشريكة في المرحلة الأولى
+              {t("ما نُقدّمه للجهات الشريكة في المرحلة الأولى", "What we offer partner entities during phase one")}
             </div>
             <ul>
-              <li>تدريب الفِرَق</li>
-              <li>جلسات مراجعة دورية مع فريقكم</li>
+              <li>{t("تدريب الفِرَق", "Team training")}</li>
+              <li>{t("جلسات مراجعة دورية مع فريقكم", "Regular review sessions with your team")}</li>
               <li>Mutabiq for Figma Pro</li>
-              <li>وصول كامل لمُطابق كلاود</li>
-              <li>رخص للجهات الشريكة</li>
+              <li>{t("وصول كامل لمُطابق كلاود", "Full access to Mutabiq Cloud")}</li>
+              <li>{t("رخص للجهات الشريكة", "Licenses for partner entities")}</li>
             </ul>
           </div>
         </div>
@@ -1970,9 +1962,9 @@ export default async function HomePage({ params }: HomePageProps) {
       <section className="s" style={{ paddingTop: 0 }}>
         <div className="wrap">
           <div className="cta">
-            <h2>اعرف درجتك في DXMI 2026 — في الديزاين أو في الإنتاج.</h2>
+            <h2>{t("اعرف درجتك في DXMI 2026 — في الديزاين أو في الإنتاج.", "Know your DXMI 2026 score — in design or in production.")}</h2>
             <p>
-              احجز عرضًا مخصصًا لجهتك. سنُجري تدقيقًا تجريبيًا على موقعك الرسمي ونعرض النتائج في جلسة واحدة.
+              {t("احجز عرضًا مخصصًا لجهتك. سنُجري تدقيقًا تجريبيًا على موقعك الرسمي ونعرض النتائج في جلسة واحدة.", "Book a tailored demo for your entity. We'll run a pilot audit on your official site and present the results in a single session.")}
             </p>
           </div>
         </div>
