@@ -55,8 +55,10 @@ html:has(.mtb-marketing) body {
    the start edge. */
 .mtb-marketing .nav-cta { display: flex; align-items: center; gap: 10px; margin-inline-start: auto; }
 .mtb-marketing .lang { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font: 500 12px/1 var(--font-en); }
-.mtb-marketing .lang button { border: 0; padding: 7px 11px; background: #fff; cursor: pointer; color: var(--fg-muted); }
-.mtb-marketing .lang button.on { background: var(--gray-100); color: var(--fg-strong); }
+.mtb-marketing .lang button,
+.mtb-marketing .lang a { border: 0; padding: 7px 11px; background: #fff; cursor: pointer; color: var(--fg-muted); text-decoration: none; }
+.mtb-marketing .lang button.on,
+.mtb-marketing .lang a.on { background: var(--gray-100); color: var(--fg-strong); }
 /* Theme toggle — matches the language pill's visual weight so the
    two controls read as a paired set. */
 .mtb-marketing .nav-theme {
