@@ -6,17 +6,26 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing, type Locale } from "@/i18n/routing";
 import "@/styles/globals.css";
 
-export const metadata: Metadata = {
-  title: "Mutabiq Cloud — DGA Compliance Platform",
-  description:
-    "منصة سعودية لتدقيق امتثال DXMI 2026 آليًا — مبنية على معايير هيئة الحكومة الرقمية.",
-  openGraph: {
-    type: "website",
-    locale: "ar_SA",
-    alternateLocale: "en_US",
-    siteName: "Mutabiq Cloud",
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isAR = locale !== "en";
+  return {
+    title: "Mutabiq Cloud — DGA Compliance Platform",
+    description: isAR
+      ? "منصة سعودية لتدقيق امتثال DXMI 2026 آليًا — مبنية على معايير هيئة الحكومة الرقمية."
+      : "Saudi platform for automated DXMI 2026 compliance auditing — built on the Digital Government Authority standards.",
+    openGraph: {
+      type: "website",
+      locale: isAR ? "ar_SA" : "en_US",
+      alternateLocale: isAR ? "en_US" : "ar_SA",
+      siteName: "Mutabiq Cloud",
+    },
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
