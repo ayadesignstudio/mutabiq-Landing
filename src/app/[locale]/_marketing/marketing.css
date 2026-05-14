@@ -853,6 +853,284 @@ html:has(.mtb-marketing) body {
 .mtb-marketing .hc-fnd .tag { margin-inline-start: auto; font: 500 10px/1 var(--font-en); color: var(--fg-muted); padding: 3px 6px; border: 1px solid var(--border); border-radius: 4px; }
 
 /* ============================================================
+   Paradigm shift section (.shift) — proves the "platform, not a
+   tool" claim from the Platform bento above with six concrete
+   before/after pairs. 3-column grid [old | axis | new] reading
+   naturally in RTL as "start = before → end = after". Old side is
+   muted gray with a faded strikethrough; new side is vibrant SA
+   green. A vertical SA-tinted thread connects the rows, and the
+   head row carries an animated leftward arrow (RTL direction).
+   ============================================================ */
+.mtb-marketing .shift {
+  position: relative;
+  padding: 104px 0;
+  background: linear-gradient(180deg, #fff 0%, var(--gray-50) 100%);
+  overflow: hidden;
+}
+/* Soft SA-green halo anchored at the bottom-end (physical-left)
+   corner — visually echoes the direction of movement (old → new
+   reads from start-side toward end-side, where the halo sits). */
+.mtb-marketing .shift::before {
+  content: "";
+  position: absolute;
+  bottom: -200px;
+  inset-inline-start: -180px;
+  width: 540px;
+  height: 540px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, color-mix(in oklab, var(--sa-300) 18%, transparent), transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+.mtb-marketing .shift .wrap { position: relative; z-index: 1; }
+
+.mtb-marketing .shift .s-title em {
+  font-style: normal;
+  color: var(--sa-700);
+}
+
+.mtb-marketing .shift-board {
+  display: grid;
+  grid-template-columns: 1fr 72px 1fr;
+  gap: 14px 0;
+  align-items: stretch;
+  margin-top: 56px;
+}
+
+/* Column header — small badge over a role title, separated from
+   the cells below by a thin rule that runs the full column width. */
+.mtb-marketing .shift-col-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0 24px 22px;
+  border-bottom: 1px solid var(--border-muted);
+}
+.mtb-marketing .shift-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font: 600 11px/1 var(--font-ar);
+  letter-spacing: .04em;
+}
+.mtb-marketing .shift-old-head .shift-tag {
+  background: var(--error-50);
+  color: var(--error-700);
+  border: 1px solid var(--error-100);
+}
+.mtb-marketing .shift-new-head .shift-tag {
+  background: var(--sa-50);
+  color: var(--sa-700);
+  border: 1px solid var(--sa-200);
+}
+.mtb-marketing .shift-col-head h3 {
+  font: 700 22px/1.25 var(--font-ar);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.mtb-marketing .shift-old-head h3 { color: var(--gray-500); }
+.mtb-marketing .shift-new-head h3 { color: var(--sa-800); }
+
+/* Axis head — central column on the header row, holding the
+   animated direction arrow that points toward the "new" side. */
+.mtb-marketing .shift-axis-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 16px;
+}
+.mtb-marketing .shift-arrow {
+  width: 30px;
+  height: 30px;
+  color: var(--sa-600);
+  stroke-width: 2.25;
+  animation: mtb-shift-arrow 2.4s cubic-bezier(.2,.8,.2,1) infinite;
+}
+@keyframes mtb-shift-arrow {
+  0%, 100% { transform: translateX(0); opacity: 1; }
+  50%      { transform: translateX(-7px); opacity: 0.55; }
+}
+
+/* Soft vertical thread between paired cells — makes the six rows
+   read as one continuous movement rather than disconnected items. */
+.mtb-marketing .shift-line {
+  align-self: stretch;
+  width: 2px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, transparent 0%, var(--sa-200) 25%, var(--sa-200) 75%, transparent 100%);
+  opacity: 0.55;
+}
+
+/* Cells — icon column + body column. Padding tuned so old/new pairs
+   align horizontally at the same baseline even with longer copy. */
+.mtb-marketing .shift-cell {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 22px 24px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.mtb-marketing .shift-cell .shift-ic {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.mtb-marketing .shift-cell .shift-ic svg {
+  width: 22px; height: 22px;
+}
+.mtb-marketing .shift-body b {
+  font: 700 17px/1.4 var(--font-ar);
+  display: block;
+  margin-bottom: 6px;
+  letter-spacing: -0.005em;
+}
+.mtb-marketing .shift-body p {
+  font: 400 14px/1.6 var(--font-ar);
+  margin: 0;
+}
+
+/* Old side — desaturated bg, faded icon chip with a tiny error dot
+   anchored at the chip's RTL-end corner. Headline has a soft error
+   strikethrough to telegraph "this way is being retired". */
+.mtb-marketing .shift-old {
+  background: rgba(255, 255, 255, 0.45);
+  border-color: var(--border-muted);
+}
+.mtb-marketing .shift-old .shift-ic {
+  background: var(--gray-100);
+  color: var(--gray-500);
+  position: relative;
+}
+.mtb-marketing .shift-old .shift-ic::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  inset-inline-end: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: var(--error-300);
+  box-shadow: 0 0 0 2px #fff;
+}
+.mtb-marketing .shift-old .shift-ic svg { stroke-width: 1.75; }
+.mtb-marketing .shift-old .shift-body b {
+  color: var(--gray-600);
+  text-decoration: line-through;
+  text-decoration-color: var(--error-300);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+}
+.mtb-marketing .shift-old .shift-body p { color: var(--fg-subtle); }
+
+/* New side — vibrant SA green, soft tint bg, icon chip with subtle
+   green ground-shadow. Hover lifts the card to signal "this is the
+   live direction". */
+.mtb-marketing .shift-new {
+  background: linear-gradient(135deg, rgba(36, 147, 95, 0.05), rgba(36, 147, 95, 0.01));
+  border-color: var(--sa-100);
+}
+.mtb-marketing .shift-new:hover {
+  transform: translateY(-2px);
+  border-color: var(--sa-300);
+  background: linear-gradient(135deg, rgba(36, 147, 95, 0.08), rgba(36, 147, 95, 0.02));
+}
+.mtb-marketing .shift-new .shift-ic {
+  background: var(--sa-50);
+  color: var(--sa-700);
+  box-shadow: 0 6px 14px -8px rgba(36, 147, 95, 0.45);
+}
+.mtb-marketing .shift-new .shift-ic svg { stroke-width: 2; }
+.mtb-marketing .shift-new .shift-body b { color: var(--fg-strong); }
+.mtb-marketing .shift-new .shift-body p { color: var(--fg-muted); }
+
+/* Closing strap — section's punch line. The two contrasting concepts
+   inside get inline styling that mirrors the column treatment: the
+   old idea is muted+struck, the new idea is bold SA green. */
+.mtb-marketing .shift-strap {
+  margin: 56px auto 0;
+  max-width: 760px;
+  text-align: center;
+  padding: 26px 32px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--sa-50), #fff 65%);
+  border: 1px solid var(--sa-100);
+  box-shadow: 0 18px 44px -22px rgba(36, 147, 95, 0.25);
+}
+.mtb-marketing .shift-strap p {
+  font: 500 18px/1.55 var(--font-ar);
+  color: var(--fg-strong);
+  margin: 0;
+}
+.mtb-marketing .shift-strap em { font-style: normal; }
+.mtb-marketing .shift-strap em:first-of-type {
+  color: var(--gray-500);
+  text-decoration: line-through;
+  text-decoration-color: var(--error-300);
+  text-decoration-thickness: 1.5px;
+}
+.mtb-marketing .shift-strap em:last-of-type {
+  color: var(--sa-700);
+  font-weight: 700;
+}
+
+/* Tablet — keep the 3-column grid but tighten paddings and font sizes. */
+@media (max-width: 980px) {
+  .mtb-marketing .shift { padding: 80px 0; }
+  .mtb-marketing .shift-board { grid-template-columns: 1fr 48px 1fr; }
+  .mtb-marketing .shift-cell { padding: 18px 18px; gap: 14px; }
+  .mtb-marketing .shift-body b { font-size: 16px; }
+  .mtb-marketing .shift-body p { font-size: 13.5px; }
+  .mtb-marketing .shift-col-head h3 { font-size: 19px; }
+}
+
+/* Mobile — stack each pair vertically (old then new) and replace
+   the central axis with a tiny inline arrow between the two cells. */
+@media (max-width: 720px) {
+  .mtb-marketing .shift { padding: 64px 0; }
+  .mtb-marketing .shift-board {
+    grid-template-columns: 1fr;
+    gap: 28px 0;
+  }
+  .mtb-marketing .shift-axis-head { display: none; }
+  .mtb-marketing .shift-line { display: none; }
+  .mtb-marketing .shift-col-head { padding-bottom: 14px; }
+  /* On stacked layout, the OLD cell stays as-is and the NEW cell gets
+     a small green arrow chip above it that visually links the pair. */
+  .mtb-marketing .shift-new { margin-top: -16px; position: relative; }
+  .mtb-marketing .shift-new::before {
+    content: "";
+    position: absolute;
+    top: -22px;
+    inset-inline-start: 28px;
+    width: 28px;
+    height: 28px;
+    border-radius: 9999px;
+    background: var(--sa-600);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><line x1='12' y1='5' x2='12' y2='19'/><polyline points='19 12 12 19 5 12'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: 0 4px 12px -4px rgba(36, 147, 95, 0.5), 0 0 0 4px #fff;
+    z-index: 2;
+  }
+  .mtb-marketing .shift-strap { padding: 22px 22px; }
+  .mtb-marketing .shift-strap p { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mtb-marketing .shift-arrow { animation: none !important; }
+  .mtb-marketing .shift-cell { transition: none !important; }
+}
+
+/* ============================================================
    Authority section — strategic positioning: "Mutabiq isn't a
    client of DGA, it's an extension of DGA's regulatory + knowledge
    arm." Two-role split with a central DGA-badged axis, closed by
