@@ -1328,6 +1328,157 @@ export default async function HomePage({ params }: HomePageProps) {
         </div>
       </section>
 
+      {/* Paradigm shift — proves the "platform, not a tool" claim from
+          the section above with six concrete before/after pairs that
+          map to DXMI 2026 workflow reality. Layout is a 3-column grid
+          [old | axis | new] that, in RTL flow, reads naturally as
+          "start = before → end = after". The center axis carries a
+          leftward arrow at the head (RTL reading direction) and a soft
+          vertical thread between rows so the six pairs read as one
+          continuous movement, not isolated bullets. */}
+      <section className="s shift">
+        <div className="wrap">
+          <div className="s-head" data-reveal>
+            <div className="s-kicker">نقلة النموذج</div>
+            <h2 className="s-title">
+              من امتثال موسمي… إلى <em>منظومة مستمرة</em>
+            </h2>
+            <p className="s-lede">
+              مُطابق ليس أداةً بديلة في نفس المسار القديم — هو تحوّل في
+              منظومة الامتثال نفسها. ست نقلات جوهرية تظهر في كل دورة عمل.
+            </p>
+          </div>
+
+          <div className="shift-board">
+            {/* Column headers */}
+            <div className="shift-col-head shift-old-head" data-reveal>
+              <span className="shift-tag">قبل</span>
+              <h3>الطريقة القديمة</h3>
+            </div>
+            <div className="shift-axis-head" aria-hidden>
+              <ArrowLeft className="shift-arrow" />
+            </div>
+            <div className="shift-col-head shift-new-head" data-reveal>
+              <span className="shift-tag">مع مُطابق</span>
+              <h3>منظومة الامتثال المستمر</h3>
+            </div>
+
+            {/* Row 1 — Cadence: seasonal → continuous */}
+            <div className="shift-cell shift-old" data-reveal>
+              <span className="shift-ic"><Clock /></span>
+              <div className="shift-body">
+                <b>تقييم موسمي مرّة في السنة</b>
+                <p>سباق متأخر مع موعد زيارة الهيئة، وقرارات إصلاح تحت ضغط الوقت.</p>
+              </div>
+            </div>
+            <div className="shift-line" aria-hidden></div>
+            <div className="shift-cell shift-new" data-reveal>
+              <span className="shift-ic"><Repeat /></span>
+              <div className="shift-body">
+                <b>امتثال مستمر داخل كل دورة عمل</b>
+                <p>كل تغيير في الموقع يُفحَص فور حدوثه — قبل أن يتحوّل إلى مخالفة مؤجَّلة.</p>
+              </div>
+            </div>
+
+            {/* Row 2 — Roles: self-assessment vs DGA = chaos → two-track unified */}
+            <div className="shift-cell shift-old" data-reveal>
+              <span className="shift-ic"><Unlink /></span>
+              <div className="shift-body">
+                <b>تقييم ذاتي يتعارض مع تقييم الهيئة</b>
+                <p>الجهة تقيس بطريقة، والمقيِّم بأخرى — والنتيجتان لا تتطابقان.</p>
+              </div>
+            </div>
+            <div className="shift-line" aria-hidden></div>
+            <div className="shift-cell shift-new" data-reveal>
+              <span className="shift-ic"><Network /></span>
+              <div className="shift-body">
+                <b>مساران بنفس المعيار · نتيجة قابلة للمقارنة</b>
+                <p>التقييم الذاتي وتقييم الهيئة من نفس محرّك DXMI 2026 — صفر فجوة قياس.</p>
+              </div>
+            </div>
+
+            {/* Row 3 — Change mgmt: surprise updates → versioned with grace */}
+            <div className="shift-cell shift-old" data-reveal>
+              <span className="shift-ic"><AlertTriangle /></span>
+              <div className="shift-body">
+                <b>تحديثات المعيار تأتي كمفاجأة</b>
+                <p>بنود جديدة تظهر في التقييم بلا مهلة استعداد — فتتحوّل إلى مخالفات فورية.</p>
+              </div>
+            </div>
+            <div className="shift-line" aria-hidden></div>
+            <div className="shift-cell shift-new" data-reveal>
+              <span className="shift-ic"><BadgeCheck /></span>
+              <div className="shift-body">
+                <b>إصدارات مرقَّمة مع مهلة سماح</b>
+                <p>كل تحديث في DXMI يصل بإصداره ومدّة التطبيق — جدول واضح يُتيح التحضير المسبق.</p>
+              </div>
+            </div>
+
+            {/* Row 4 — Data: Excel/email scatter → single source of truth */}
+            <div className="shift-cell shift-old" data-reveal>
+              <span className="shift-ic"><FileText /></span>
+              <div className="shift-body">
+                <b>تتبّع في Excel وإيميلات منثورة</b>
+                <p>كل جهة تبني ملفّاتها بطريقتها، والملاحظات تضيع بين الإصدارات والمراسلات.</p>
+              </div>
+            </div>
+            <div className="shift-line" aria-hidden></div>
+            <div className="shift-cell shift-new" data-reveal>
+              <span className="shift-ic"><Layers /></span>
+              <div className="shift-body">
+                <b>مصدر واحد للحقيقة · تاريخ بدون حد</b>
+                <p>كل تشغيل، كل ملاحظة، كل إصلاح — في خيط واحد متّصل قابل للمقارنة عبر السنوات.</p>
+              </div>
+            </div>
+
+            {/* Row 5 — Process: disputes drag → structured workflows */}
+            <div className="shift-cell shift-old" data-reveal>
+              <span className="shift-ic"><Scale /></span>
+              <div className="shift-body">
+                <b>اعتراضات تطول لأشهر بلا قالب</b>
+                <p>الردود تنتقل بين الإيميل والاجتماعات — بلا تسلسل موثَّق ولا مدّة محسومة.</p>
+              </div>
+            </div>
+            <div className="shift-line" aria-hidden></div>
+            <div className="shift-cell shift-new" data-reveal>
+              <span className="shift-ic"><ClipboardList /></span>
+              <div className="shift-body">
+                <b>مسار اعتراض هيكلي بشواهد ومُدَد</b>
+                <p>كل اعتراض له شاهد بصري، ومرجع بنديّ، ومسار حسم محدّد الزمن.</p>
+              </div>
+            </div>
+
+            {/* Row 6 — Culture: punishment → enablement (closer) */}
+            <div className="shift-cell shift-old" data-reveal>
+              <span className="shift-ic"><AlertOctagon /></span>
+              <div className="shift-body">
+                <b>الامتثال = عقوبة بعد الحدث</b>
+                <p>الموارد تُصرف على إصلاح المخالفات الظاهرة، لا على رفع نضج المنصّة فعلًا.</p>
+              </div>
+            </div>
+            <div className="shift-line" aria-hidden></div>
+            <div className="shift-cell shift-new" data-reveal>
+              <span className="shift-ic"><Rocket /></span>
+              <div className="shift-body">
+                <b>الامتثال = تمكين قبل الحدث</b>
+                <p>الفريق يرى الفجوة وهي صغيرة، فيُصلحها كجزء من العمل اليومي — لا كأزمة.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Closing strap — punch line that summarizes the section's
+              thesis: we don't add a tool on top of broken systems, we
+              redesign the system itself. */}
+          <div className="shift-strap" data-reveal>
+            <p>
+              ست نقلات · في طريقة عمل واحدة.
+              لا نضيف <em>أداةً جديدة</em> فوق الفوضى — نُعيد تصميم
+              <em> المنظومة </em>نفسها.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Authority section — flips the lens: Mutabiq isn't just a tool
           FOR entities, it's infrastructure that ENABLES the regulator
           itself. Two-role split (Regulator + Publisher) with a central
