@@ -1022,12 +1022,12 @@ html:has(.mtb-marketing) body {
   box-shadow: 0 0 0 2px #fff;
 }
 .mtb-marketing .shift-old .shift-ic svg { stroke-width: 1.75; }
+/* Arabic strike-through hurts readability — connected letter forms
+   collide with the line. The "old" treatment is already carried by
+   the muted color, the red dot on the icon chip, and the red "قبل"
+   tag at the column head, so we drop the strike entirely. */
 .mtb-marketing .shift-old .shift-body b {
   color: var(--gray-600);
-  text-decoration: line-through;
-  text-decoration-color: var(--error-300);
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 4px;
 }
 .mtb-marketing .shift-old .shift-body p { color: var(--fg-subtle); }
 
@@ -1073,9 +1073,6 @@ html:has(.mtb-marketing) body {
 .mtb-marketing .shift-strap em { font-style: normal; }
 .mtb-marketing .shift-strap em:first-of-type {
   color: var(--gray-500);
-  text-decoration: line-through;
-  text-decoration-color: var(--error-300);
-  text-decoration-thickness: 1.5px;
 }
 .mtb-marketing .shift-strap em:last-of-type {
   color: var(--sa-700);
